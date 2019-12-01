@@ -24,17 +24,21 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { customerDelete } from "../redux/actions/customerDeleteAction";
 import RNPickerSelect from 'react-native-picker-select';
 import { Input } from "react-native-elements";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { stat } from "fs";
 
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState>;
   isHomeLoading: boolean;
   customers: ICustomerItem[];
+
   GetCustomers: (orderType: number, searchText: string, dayOfWeek: number, pageIndex: number) => void;
   GetCustomerMore: (orderType: number, searchText: string, dayOfWeek: number, pageIndex: number) => void;
 
-  customerDelete: (customerId: number) => void;
+  customerDelete: (customerId: number) =>  void;
   CustomerDeleteIsSuccess: boolean;
+  isLoadingCustomerDelete:boolean;
 }
 
 interface State {
@@ -53,6 +57,7 @@ interface State {
   error: boolean;
   customersData: ICustomerItem[];
   fountainCount?: number;
+
 }
 
 interface search {
@@ -161,13 +166,13 @@ class Customer extends Component<Props, State> {
 
   openModal(customerId: number, nameSurname: string, companyName: string, dayOfWeek?: number, fountainCount?: number) {
     this.setState({
-      modalVisible: true,
       customerId: customerId,
       nameSurname: nameSurname,
       companyName: companyName,
       dayOfWeekCustomer: dayOfWeek,
       fountainCount: fountainCount === null ? 0 : fountainCount,
     });
+    this.CustomerListSheet.open();
   }
 
   closeModal() {
@@ -195,12 +200,12 @@ class Customer extends Component<Props, State> {
   }
   deleteSelectedCustomer() {
     const { customerDelete } = this.props;
-    customerDelete(this.state.customerId);
-    this.closeModal();
-    this.onRefresh();
-    this.setState({ refreshing: false });
+     customerDelete(this.state.customerId);
     this.setState({ page: 1 });
-    this._getCustomerList(this.state.orderType, this.state.searchText, this.state.dayOfWeek, this.state.page);
+    if(this.props.CustomerDeleteIsSuccess){
+      this.props.GetCustomers(this.state.orderType, this.state.searchText, this.state.dayOfWeek, 1);
+      
+    }
 
   }
 
@@ -232,6 +237,31 @@ class Customer extends Component<Props, State> {
       })
 
   }
+  _renderCustomerSheetContent() {
+    return (<View style={styles.SheetContainer}>
+
+      <TouchableOpacity style={styles.SheetItemContainer}
+        onPress={() => {
+          this.CustomerListSheet.close();
+          this.editCustomer();
+        }}>
+        <Icon name="ios-arrow-round-forward" size={30} style={styles.SheetItemIcon}></Icon>
+
+        <Text style={styles.SheetItemText}
+        >Düzenle</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.SheetItemContainer}
+        onPress={() => {
+          this.CustomerListSheet.close();
+          this.deleteCustomerAlert();
+        }}>
+        <Icon name="ios-trash" size={30} style={styles.SheetItemIcon}></Icon>
+        <Text style={styles.SheetItemText}
+        >Sil</Text>
+      </TouchableOpacity>
+
+    </View>);
+  }
 
   onRefresh() {
     this.setState({ page: 1 });
@@ -240,17 +270,15 @@ class Customer extends Component<Props, State> {
     this.setState({ refreshing: false });
   }
   _renderView() {
-    const { customers, isHomeLoading, navigation } = this.props;
-    if (this.props.isHomeLoading) {
+    const { customers, isHomeLoading, navigation } = this.props;    
+    if (this.props.isHomeLoading || this.props.isLoadingCustomerDelete) {
       return (<ActivityIndicator></ActivityIndicator>);
     }
     else {
-
-
-      if (this.props.customers.length > 0 || (this.props.isHomeLoading && this.state.page > 1)) {
+      if ((this.props.customers.length > 0 || (this.props.isHomeLoading===false && this.state.page > 1) && this.props.isLoadingCustomerDelete===false)) {
+        console.log(this.props.isLoadingCustomerDelete, "çek "); 
         return (
           <View>
-            <NavigationEvents onWillFocus={()=>this.props.GetCustomers(1,"", 0, 1)}/>
             {this._renderActivity()}
             {/* <Header
           title="Müşteriler"
@@ -331,6 +359,23 @@ class Customer extends Component<Props, State> {
 
     return (
       <SafeAreaView style={styles.container}>
+        <NavigationEvents onWillFocus={() => this.props.GetCustomers(1, "", 0, 1)} />
+        <RBSheet
+          ref={ref => {
+            this.CustomerListSheet = ref;
+          }}
+          height={250}
+          duration={200}
+          customStyles={{
+            container: {
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              paddingLeft: 20
+            }
+          }}
+        >
+          {this._renderCustomerSheetContent()}
+        </RBSheet>
         <StatusBar backgroundColor="#2B6EDC" />
 
         <KeyboardAvoidingView
@@ -345,20 +390,7 @@ class Customer extends Component<Props, State> {
           >
             <View style={styles.modalContainer}>
               <View style={styles.innerContainer}>
-                <TouchableOpacity style={styles.modalCancelButtonContainer}
-                  onPress={() => this.closeModal()}>
-                  <Icon name="md-close" size={30} color={"#6E6E6E"} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalEditButtonContainer}
-                  onPress={() => this.editCustomer()}>
-                  <Text style={styles.modalEditButtonText}
-                  >Düzenle</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalDeleteButtonContainer}
-                  onPress={() => this.deleteCustomerAlert()}>
-                  <Text style={styles.modalDeleteButtonText}
-                  >Sil</Text>
-                </TouchableOpacity>
+
               </View>
             </View>
           </Modal>
@@ -373,10 +405,10 @@ class Customer extends Component<Props, State> {
                     placeholderTextColor="#9A9A9A"
                     value={this.state.searchText}
                     autoCapitalize="none"
-                    onChangeText={e=>
-                    this.setState({searchText:e})
+                    onChangeText={e =>
+                      this.setState({ searchText: e })
                     }
-           
+
                   />
                 </View>
                 <TouchableOpacity style={styles.searchButton}
@@ -386,7 +418,7 @@ class Customer extends Component<Props, State> {
               </View>
             </View>
             <View style={styles.search_row}>
-              <View style={styles.rnpickerselect}>
+              <View style={[styles.rnpickerselect, styles.PickerColor]}>
                 <RNPickerSelect
                   style={styles.pickerSelectStyles}
                   placeholder={placeholder}
@@ -404,7 +436,7 @@ class Customer extends Component<Props, State> {
                   }}
                 />
               </View>
-              <View style={styles.rnpickerselect}>
+              <View style={[styles.rnpickerselect, styles.PickerColor]}>
                 <RNPickerSelect
                   style={styles.pickerSelectStyles}
                   placeholder={placeHolderDay}
@@ -438,7 +470,8 @@ class Customer extends Component<Props, State> {
 const mapStateToProps = (state: AppState) => ({
   isHomeLoading: state.home.isHomeLoading,
   customers: state.home.customers,
-  CustomerDeleteIsSuccess: state.customerDelete.isSuccess,
+  CustomerDeleteIsSuccess: state.customerDelete.isSuccessCustomerDelete,
+  isLoadingCustomerDelete : state.customerDelete.isLoadingCustomerDelete
 })
 function bindToAction(dispatch: any) {
   return {

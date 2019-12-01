@@ -25,7 +25,7 @@ import { Input } from "react-native-elements";
 interface Props {
   navigation: NavigationScreenProp<NavigationState>;
   isSuccees: boolean;
-  customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number,fountainCount:number) => void;
+  customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number, fountainCount: number) => void;
   CustomerEditMessage: string;
   musteri: customerData;
   GetUser: (employeeId: number) => void;
@@ -48,7 +48,7 @@ const girdiler = Yup.object().shape({
     .min(1)
     .max(30)
     .required(),
-    fountainCount: Yup.number()
+  fountainCount: Yup.number()
     .positive()
     .required()
     .moreThan(0),
@@ -61,27 +61,27 @@ class editCustomer extends Component<Props, State> {
 
 
 
- 
 
 
-  static navigationOptions =  ({navigation}:Props) => {
+
+  static navigationOptions = ({ navigation }: Props) => {
     return {
 
       title: 'Müşteri Düzenle',
-    
 
 
-    headerStyle: {
-      backgroundColor: '#2B6EDC',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+
+      headerStyle: {
+        backgroundColor: '#2B6EDC',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
 
     }
 
-    
+
   };
 
 
@@ -144,15 +144,11 @@ class editCustomer extends Component<Props, State> {
     const placeHolderDay = {
       label: days[dayOfWeekValue],
       value: dayOfWeekValue,
-      color: '#2B6EDC',
+      color: '#333',
     }
-
     return (
       <View style={styles.addCustomerContainer}>
         <StatusBar backgroundColor="#2B6EDC" />
-
-
-        <View style={{ marginBottom: 30 }}></View>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
@@ -166,35 +162,37 @@ class editCustomer extends Component<Props, State> {
                 return (
                   <View>
                     <View style={styles.inputContainer}>
-                      <Text>Adı Soyadı</Text>
+                      <Text style={styles.FormLabel}>Adı Soyadı</Text>
                       <View style={styles.input}>
                         <Input
 
                           placeholder="Adı Soyadı"
                           placeholderTextColor="#9A9A9A"
                           value={props.values.musteriAdiSoyadi}
+                          underlineColorAndroid="transparent"
                           autoCapitalize="words"
                           onChangeText={props.handleChange("musteriAdiSoyadi")}
                           onBlur={props.handleBlur("musteriAdiSoyadi")}
                         />
                       </View>
-                      <Text>Şirket Adı</Text>
+                      <Text style={styles.FormLabel}>Şirket Adı</Text>
                       <View style={styles.input}>
                         <Input
 
                           placeholder="Şirket Adı"
                           placeholderTextColor="#9A9A9A"
                           value={props.values.sirketAdi}
+                          underlineColorAndroid="transparent"
                           autoCapitalize="words"
                           onChangeText={props.handleChange("sirketAdi")}
                           onBlur={props.handleBlur("sirketAdi")}
 
                         />
                       </View>
-                      <Text>Sebil Sayısı</Text>
+                      <Text style={styles.FormLabel}> Sebil Sayısı</Text>
                       <View style={styles.input}>
                         <Input
-
+                          underlineColorAndroid="transparent"
                           placeholder="Sebil Sayısı"
                           placeholderTextColor="#9A9A9A"
                           value={String(props.values.fountainCount)}
@@ -205,7 +203,7 @@ class editCustomer extends Component<Props, State> {
 
                         />
                       </View>
-                      <Text>Ödeme Alınacak Gün</Text>
+                      <Text style={styles.FormLabel}>Ödeme Alınacak Gün</Text>
                       <View style={styles.rnpickerselect}>
                         <RNPickerSelect
                           style={styles.pickerSelectStyles}
@@ -223,7 +221,7 @@ class editCustomer extends Component<Props, State> {
                           ]}
                           textInputProps={{ underlineColor: 'yellow' }}
                           Icon={() => {
-                            return <Icon name="md-arrow-down" size={24} color="gray" style={{ top: Platform.OS == 'ios' ? 0 :  15 }} />;
+                            return <Icon name="md-arrow-down" size={24} color="gray" style={{ top: Platform.OS == 'ios' ? 0 : 15 }} />;
                           }}
                         />
                       </View>
@@ -251,8 +249,8 @@ const mapStateToProps = (state: AppState) => ({
 
 function bindToAction(dispatch: any) {
   return {
-    customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number,fountainCount:number) =>
-      dispatch(customerEdit(id, nameSurname, companyName, dayOfWeek,fountainCount)),
+    customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number, fountainCount: number) =>
+      dispatch(customerEdit(id, nameSurname, companyName, dayOfWeek, fountainCount)),
     GetUser: (employeeId: number) =>
       dispatch(GetUser(employeeId)),
   };

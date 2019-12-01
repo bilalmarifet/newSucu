@@ -18,12 +18,13 @@ import RBSheet from "react-native-raw-bottom-sheet";
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState>;
-  orders: IOrderItem[],
-  takeTotalAmount: number,
-  tookTotalAmount: number,
-  restTotalAmount: number,
-  isOrderLoading: boolean,
-  loadingMore: boolean,
+  orders: IOrderItem[];
+  takeTotalAmount: number;
+  tookTotalAmount: number;
+  restTotalAmount: number;
+  isOrderLoading: boolean;
+  loadingMore: boolean;
+  isSuccess :boolean;
   GetOrders: (customerId: number, pageIndex: number, pageSize: number) => void;
   GetOrdersMore: (customerId: number, pageIndex: number, pageSize: number) => void;
   AddCash: (orderId: number, amount: string) => void;
@@ -167,13 +168,13 @@ class OrdersCustomer extends Component<Props, State> {
 
   openModal(orderId: number, unitPrice: number, count: number, productId: number, productName: string) {
     this.setState({
-      modalVisible: true,
       orderId: orderId,
       unitPrice: unitPrice,
       count: count,
       productId: productId,
       productName: productName,
     });
+    this.OrderSheet.open();
   }
 
   closeModal() {
@@ -281,7 +282,59 @@ class OrdersCustomer extends Component<Props, State> {
       />);
     }
   }
+  _renderCustomerSheetContent(){
+    return ( <View style={styles.SheetContainer}>
+      <TouchableOpacity style={styles.SheetItemContainer}    onPress={() => {
+                this.CustomerSheet.close();
+        this.goToNewPricePage();}}>
+        <Icon name="ios-add" size={30} style={styles.SheetItemIcon}></Icon>
+        <Text style={styles.SheetItemText}>
+          Yeni Fiyat Ekle
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.SheetItemContainer}   onPress={() => {
+        this.CustomerSheet.close();
+        this.goToDefinedPrice();}}>
+        <Icon name="ios-list" size={30} style={styles.SheetItemIcon}></Icon>
+        <Text style={styles.SheetItemText}>
+          Tanımlı Fiyatlar
+        </Text>
+      </TouchableOpacity>
 
+    </View>);
+  }
+
+  _renderOrderSheetContent(){
+    return ( <View style={styles.SheetContainer}>
+                <TouchableOpacity style={styles.SheetItemContainer}
+                  onPress={() => {
+                    this.OrderSheet.close();
+                    this.addCash();
+                  }}>
+                    <Icon name="ios-add" size={30} style={styles.SheetItemIcon}></Icon>
+                  <Text style={styles.SheetItemText}
+                  >Ödeme Ekle</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.SheetItemContainer}
+                  onPress={() => {
+                    this.OrderSheet.close();
+                    this.editOrder();
+                    }}>
+                           <Icon name="ios-arrow-round-forward" size={30} style={styles.SheetItemIcon}></Icon>
+                  <Text style={styles.SheetItemText}
+                  >Düzenle</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.SheetItemContainer}
+                  onPress={() => {
+                    this.OrderSheet.close();
+                    this.deleteOrderAlert();
+                  }}>
+                         <Icon name="ios-trash" size={30} style={styles.SheetItemIcon}></Icon>
+                  <Text style={styles.SheetItemText}
+                  >Sil</Text>
+                </TouchableOpacity>
+    </View>);
+  }
 
   render() {
 
@@ -299,12 +352,11 @@ class OrdersCustomer extends Component<Props, State> {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <RBSheet
-          
           ref={ref => {
             this.CustomerSheet = ref;
           }}
-            height={300}
-            duration={250}
+            height={250}
+            duration={200}
             customStyles={{
               container: {
                 justifyContent: "flex-start",
@@ -313,58 +365,26 @@ class OrdersCustomer extends Component<Props, State> {
               }
             }}
           >
-            <View style={styles.SheetContainer}>
-              <TouchableOpacity style={styles.SheetItemContainer}    onPress={() => {
-                        this.CustomerSheet.close();
-                this.goToNewPricePage();}}>
-                <Icon name="ios-add" size={30} style={styles.SheetItemIcon}></Icon>
-                <Text style={styles.SheetItemText}>
-                  Yeni Fiyat Ekle
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.SheetItemContainer}   onPress={() => {
-                this.CustomerSheet.close();
-                this.goToDefinedPrice();}}>
-                <Icon name="ios-list" size={30} style={styles.SheetItemIcon}></Icon>
-                <Text style={styles.SheetItemText}>
-                  Tanımlı Fiyatlar
-                </Text>
-              </TouchableOpacity>
-     
-            </View>
+           {this._renderCustomerSheetContent()}
           </RBSheet>
 
-          <Modal
-            visible={this.state.modalVisible}
-            animationType={'slide'}
-            onRequestClose={() => this.closeModal()}
-            transparent={true}
+          <RBSheet
+          ref={ref => {
+            this.OrderSheet = ref;
+          }}
+            height={250}
+            duration={200}
+            customStyles={{
+              container: {
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                paddingLeft:20
+              }
+            }}
           >
-            <View style={styles.modalContainer}>
+           {this._renderOrderSheetContent()}
+          </RBSheet>
 
-              <View style={styles.innerContainer}>
-                <TouchableOpacity style={styles.modalCancelButtonContainer}
-                  onPress={() => this.closeModal()}>
-                  <Icon name="md-close" size={30} color={"#6E6E6E"} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalOrderButtonContainer}
-                  onPress={() => this.addCash()}>
-                  <Text style={styles.modalAddCashButtonText}
-                  >Ödeme Ekle</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalEditButtonContainer}
-                  onPress={() => this.editOrder()}>
-                  <Text style={styles.modalEditButtonText}
-                  >Düzenle</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalDeleteButtonContainer}
-                  onPress={() => this.deleteOrderAlert()}>
-                  <Text style={styles.modalDeleteButtonText}
-                  >Sil</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
 
           <Modal
             visible={this.state.modalAmountVisible}
@@ -415,32 +435,7 @@ class OrdersCustomer extends Component<Props, State> {
             </View>
           </Modal>
 
-          <Modal
-            visible={this.state.modalPriceVisible}
-            animationType={'slide'}
-            onRequestClose={() => this.closePriceModal()}
-            transparent={true}
-          >
-            <View style={styles.modalPriceContainer}>
-              <View style={styles.innerContainer}>
-                <TouchableOpacity style={styles.modalCancelButtonContainer}
-                  onPress={() => {this.closePriceModal()}}>
-                  <Icon name="md-close" size={30} color={"#6E6E6E"} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalPriceYeniPriceButtonContainer}
-               >
-                  <Text style={styles.modalPriceYeniPriceButtonText}
-                  >Yeni Fiyat Gir</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalPriceTanimliFiyatButtonContainer}
-                >
-                  <Text style={styles.modalPriceTanimliFiyatButtonText}
-                  >Tanımlı Fiyatlar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
+   
           <View style={styles.order_ustbilgi_row}>
             <View style={styles.customerDetailHeader1}>
               <Text style={styles.musteri_adi}>{nameSurname}</Text>

@@ -13,6 +13,9 @@ export const CUSTOMER_ADD_FAILED ="CustomerAddFailed";
 
 export const CUSTOMER_DELETE_SUCCEED ="CustomerDeleteSucceed";
 export const CUSTOMER_DELETE_FAILED ="CustomerDeleteFailed";
+export const CUSTOMER_DELETE_LOADING= "CustomerDeleteLoading";
+
+
 
 export const CUSTOMER_EDIT_SUCCEED ="CustomerEditSucceed";
 export const CUSTOMER_EDIT_FAILED ="CustomerEditFailed";

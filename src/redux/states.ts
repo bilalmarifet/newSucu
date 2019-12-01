@@ -48,7 +48,8 @@ export interface State {
 
   export interface CustomerDelete
   {
-    isSuccess: boolean;
+    isLoadingCustomerDelete:boolean;
+    isSuccessCustomerDelete: boolean;
   }
 
   export interface CustomerEdit
