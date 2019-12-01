@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     StatusBar,
     Alert,
+    AsyncStorage,
 } from "react-native";
 import { NavigationScreenProp, NavigationState, } from "react-navigation";
 import { Formik, ErrorMessage } from "formik";
@@ -28,8 +29,12 @@ interface Props {
     EmployeeAddMessage: string;
     employee: IEmployeeItem;
     user: IUserItem;
-    employeeAdd: (nameSurname: string, monthlySalary: number, email: string, password:string) => void;
+    employeeAdd: (nameSurname: string, monthlySalary: number, email: string, password: string) => void;
     AddUser: (nameSurname: string, mail: string, password: string) => void;
+}
+
+interface State {
+    UserType:string|null
 }
 
 interface multi extends IEmployeeItem, IUserItem { }
@@ -61,37 +66,24 @@ const girdiler = Yup.object().shape({
 });
 
 
-class addEmployee extends Component<Props, {}> {
-
-
-    
-
-
-    static navigationOptions =  ({navigation}:Props) => {
+class addEmployee extends Component<Props, State> {
+    static navigationOptions = ({ navigation }: Props) => {
         return {
-    
-          title: "Çalışan Ekle",
-
-    
-    
-        headerStyle: {
-          backgroundColor: '#2B6EDC',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-    
+            title: "Çalışan Ekle",
+            headerStyle: {
+                backgroundColor: '#2B6EDC',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
         }
-    
-        
-      };
-
-
+    };
 
     constructor(props: Props) {
         super(props);
         this.state = {
+            UserType:"",
         };
     }
 
@@ -110,109 +102,128 @@ class addEmployee extends Component<Props, {}> {
         );
     }
 
+    componentWillMount(){
+        this.getUserType();
+    }
 
     handleAddEmployee(values: multi) {
         const { employeeAdd, AddUser } = this.props;
-        employeeAdd(values.nameSurname, Number(values.monthlySalary),values.mail,values.password);
+        employeeAdd(values.nameSurname, Number(values.monthlySalary), values.mail, values.password);
         // if (values.mail != "" && values.password != "") {
         //     AddUser(values.nameSurname, values.mail, values.password);
         // }
         this.handleAlert();
     };
 
+    getUserType() {
+        //function to make three option alert
+        AsyncStorage.getItem("UserType").then((value) => {
+            this.setState({
+                UserType: value,
+            })
+        });
+    }
+
     render() {
-        return (
-            <View style={styles.addCustomerContainer}>
-                <StatusBar backgroundColor="#2B6EDC" />
-                {/* <HeaderLeft
-                    title="Çalışan Ekle"
-                    leftButtonPress={() => this.props.navigation.navigate("Employee")}
-                /> */}
-                <View style={{ marginBottom: 30 }}></View>
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                >
-                    <ScrollView bounces={false}>
-                        <Formik
-                            initialValues={initialValues}
-                            validationSchema={girdiler}
-                            onSubmit={values => this.handleAddEmployee(values)}
-                        >
-                            {({ values, errors, handleChange, handleBlur, handleSubmit }) => {
-                                return (
-                                    <View>
-                                        <View style={styles.inputContainer}>
-                                            <View style={styles.input}>
-                                            <Input
-                                                
-                                                placeholder="Adı Soyadı"
-                                                placeholderTextColor="#9A9A9A"
-                                                value={values.nameSurname}
-                                                autoCapitalize="words"
-                                                onChangeText={handleChange("nameSurname")}
-                                                onBlur={handleBlur("nameSurname")}
-                                            />
-                                            </View>
-                                            <Text style={styles.errorText}>{errors.nameSurname}</Text>
-                                            <View style={styles.inputFiyatContainer}>
-                                                <View style={{ flex: 8 }}> 
+        if (this.state.UserType === "2") {
+            return (<View style={styles.musteribulunamadiContainer}>
+              <Text style={styles.musteribulunamadiText}>Bu Sayfaya Erişim İzniniz Yok</Text>
+            </View>);
+          }
+        else{
+            return (
+                <View style={styles.addCustomerContainer}>
+                    <StatusBar backgroundColor="#2B6EDC" />
+                    {/* <HeaderLeft
+                        title="Çalışan Ekle"
+                        leftButtonPress={() => this.props.navigation.navigate("Employee")}
+                    /> */}
+                    <View style={{ marginBottom: 30 }}></View>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    >
+                        <ScrollView bounces={false}>
+                            <Formik
+                                initialValues={initialValues}
+                                validationSchema={girdiler}
+                                onSubmit={values => this.handleAddEmployee(values)}
+                            >
+                                {({ values, errors, handleChange, handleBlur, handleSubmit }) => {
+                                    return (
+                                        <View>
+                                            <View style={styles.inputContainer}>
+                                                <View style={styles.input}>
                                                     <Input
-                                                        style={styles.inputFiyat}
-                                                        placeholder="Maaş"
+    
+                                                        placeholder="Adı Soyadı"
                                                         placeholderTextColor="#9A9A9A"
-                                                        value={values.monthlySalary}
-                                                        autoCapitalize="none"
-                                                        keyboardType="numeric"
-                                                        onChangeText={handleChange("monthlySalary")}
-                                                        onBlur={handleBlur("monthlySalary")}
+                                                        value={values.nameSurname}
+                                                        autoCapitalize="words"
+                                                        onChangeText={handleChange("nameSurname")}
+                                                        onBlur={handleBlur("nameSurname")}
                                                     />
                                                 </View>
-
-                                                <Text style={styles.inputFiyatText}>TL</Text>
-                                            </View>
-                                            <Text style={styles.errorText}>{errors.monthlySalary}</Text>
-                                            <View style={styles.userAddContiner}>
-                                                <Text style={styles.addUserInfoText}>İsteğe Bağlı Alan(Çalışanın Kullanıcı Girişi İçin)</Text>
-                                                <View style={styles.input}>
-                                                <Input
-                                                    
-                                                    placeholder="E-posta"
-                                                    placeholderTextColor="#9A9A9A"
-                                                    value={values.mail}
-                                                    autoCapitalize="words"
-                                                    keyboardType="email-address"
-                                                    onChangeText={handleChange("mail")}
-                                                    onBlur={handleBlur("mail")}
-                                                />
+                                                <Text style={styles.errorText}>{errors.nameSurname}</Text>
+                                                <View style={styles.inputFiyatContainer}>
+                                                    <View style={{ flex: 8 }}>
+                                                        <Input
+                                                            style={styles.inputFiyat}
+                                                            placeholder="Maaş"
+                                                            placeholderTextColor="#9A9A9A"
+                                                            value={values.monthlySalary}
+                                                            autoCapitalize="none"
+                                                            keyboardType="numeric"
+                                                            onChangeText={handleChange("monthlySalary")}
+                                                            onBlur={handleBlur("monthlySalary")}
+                                                        />
+                                                    </View>
+    
+                                                    <Text style={styles.inputFiyatText}>TL</Text>
                                                 </View>
-                                                <Text style={styles.errorText}>{errors.mail}</Text>
-                                                <View style={styles.input}>
-                                                <Input
-                                                    
-                                                    placeholder="Şifre"
-                                                    placeholderTextColor="#9A9A9A"
-                                                    value={values.password}
-                                                    autoCapitalize="words"
-                                                    onChangeText={handleChange("password")}
-                                                    onBlur={handleBlur("password")}
-                                                />
+                                                <Text style={styles.errorText}>{errors.monthlySalary}</Text>
+                                                <View style={styles.userAddContiner}>
+                                                    <Text style={styles.addUserInfoText}>İsteğe Bağlı Alan(Çalışanın Kullanıcı Girişi İçin)</Text>
+                                                    <View style={styles.input}>
+                                                        <Input
+    
+                                                            placeholder="E-posta"
+                                                            placeholderTextColor="#9A9A9A"
+                                                            value={values.mail}
+                                                            autoCapitalize="words"
+                                                            keyboardType="email-address"
+                                                            onChangeText={handleChange("mail")}
+                                                            onBlur={handleBlur("mail")}
+                                                        />
+                                                    </View>
+                                                    <Text style={styles.errorText}>{errors.mail}</Text>
+                                                    <View style={styles.input}>
+                                                        <Input
+    
+                                                            placeholder="Şifre"
+                                                            placeholderTextColor="#9A9A9A"
+                                                            value={values.password}
+                                                            autoCapitalize="words"
+                                                            onChangeText={handleChange("password")}
+                                                            onBlur={handleBlur("password")}
+                                                        />
+                                                    </View>
+                                                    <Text style={styles.errorText}>{errors.password}</Text>
                                                 </View>
-                                                <Text style={styles.errorText}>{errors.password}</Text>
+                                                <TouchableOpacity
+                                                    style={styles.customerAddButton}
+                                                    onPress={handleSubmit}>
+                                                    <Text style={styles.CustomerAddButtonText}>Ekle</Text>
+                                                </TouchableOpacity>
                                             </View>
-                                            <TouchableOpacity
-                                                style={styles.customerAddButton}
-                                                onPress={handleSubmit}>
-                                                <Text style={styles.CustomerAddButtonText}>Ekle</Text>
-                                            </TouchableOpacity>
                                         </View>
-                                    </View>
-                                );
-                            }}
-                        </Formik>
-                    </ScrollView>
-                </KeyboardAvoidingView>
-            </View>
-        );
+                                    );
+                                }}
+                            </Formik>
+                        </ScrollView>
+                    </KeyboardAvoidingView>
+                </View>
+            );
+        }
     }
 }
 
@@ -224,8 +235,8 @@ const mapStateToProps = (state: AppState) => ({
 
 function bindToAction(dispatch: any) {
     return {
-        employeeAdd: (nameSurname: string, monthlySalary: number,mail: string, password: string) =>
-            dispatch(employeeAdd(nameSurname, monthlySalary,mail,password)),
+        employeeAdd: (nameSurname: string, monthlySalary: number, mail: string, password: string) =>
+            dispatch(employeeAdd(nameSurname, monthlySalary, mail, password)),
         AddUser: (nameSurname: string, mail: string, password: string) =>
             dispatch(AddUser(nameSurname, mail, password)),
     };

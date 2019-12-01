@@ -25,6 +25,8 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Input } from "react-native-elements";
 import { employeeCost } from "../redux/actions/employeeCostAction"
+import { timingSafeEqual } from "crypto";
+import { type } from "os";
 
 
 interface Props {
@@ -75,27 +77,42 @@ class Employee extends Component<Props, State> {
       UserType: "",
       modalAmountVisible: false,
     };
+
+    AsyncStorage.getItem("UserType").then((value) => {
+      this.setState({
+        UserType: value,
+      })
+      this.props.navigation.setParams({ Type: value });
+    });
   }
   static navigationOptions = ({ navigation }: Props) => {
-    return {
-
-      title: 'Çalışanlar',
-      headerRight: <TouchableOpacity style={{ marginRight: 20 }} onPress={() => navigation.navigate("AddEmployee")}>
-        <Icon name="ios-add" size={40} style={{ color: 'white' }} />
-      </TouchableOpacity>,
-
-
-      headerStyle: {
-        backgroundColor: '#2B6EDC',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-
-    }
-
-
+      if(navigation.getParam("Type")==="2"){
+        return {
+          title: 'Çalışanlar',
+          headerStyle: {
+            backgroundColor: '#2B6EDC',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }
+      }
+      else{
+        return {
+          title: 'Çalışanlar',
+          headerRight: <TouchableOpacity style={{ marginRight: 20 }} onPress={() => navigation.navigate("AddEmployee")}>
+            <Icon name="ios-add" size={40} style={{ color: 'white' }} />
+          </TouchableOpacity>,
+          headerStyle: {
+            backgroundColor: '#2B6EDC',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }
+      }
   };
 
 
@@ -160,7 +177,6 @@ class Employee extends Component<Props, State> {
     );
 
   }
-
   editEmployee() {
     this.closeModal();
     this.props.navigation.navigate("EditEmployee",
@@ -191,9 +207,8 @@ class Employee extends Component<Props, State> {
       this.setState({
         UserType: value,
       })
-    });
-
-
+      this.props.navigation.setParams({ Type: value });
+    });  
   }
 
   _renderView() {
@@ -229,7 +244,9 @@ class Employee extends Component<Props, State> {
   }
   render() {
     if (this.state.UserType === "2") {
-      return (<View style={styles.musteribulunamadiContainer}><Text style={styles.musteribulunamadiText}>Bu Sayfaya Erişim İzniniz Yok</Text></View>);
+      return (<View style={styles.musteribulunamadiContainer}>
+        <Text style={styles.musteribulunamadiText}>Bu Sayfaya Erişim İzniniz Yok</Text>
+      </View>);
     }
     else {
       return (
