@@ -19,7 +19,7 @@ import { AppState } from "../redux/store";
 import { IReportItem } from "../redux/models/reportModel";
 import Icon from "react-native-vector-icons/Ionicons";
 import RBSheet from "react-native-raw-bottom-sheet";
-import DatePicker from 'react-native-date-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Props {
     navigation: NavigationScreenProp<NavigationState>;
@@ -38,6 +38,10 @@ interface State {
     productStatus: boolean;
     startDate: Date;
     endDate: Date;
+    date: Date;
+    mode: string;
+    show:boolean;
+    showSecond : boolean;
 }
 
 class Report extends Component<Props, State> {
@@ -69,8 +73,47 @@ class Report extends Component<Props, State> {
             productStatus: false,
             startDate: new Date(),
             endDate: new Date(),
+            date: new Date(),
+
+            show: false,
+            showSecond : false,
         };
     }
+
+    
+      setDate = (event, startDate) => {
+        startDate = startDate || this.state.startDate;
+    
+        this.setState({
+        //   show: Platform.OS === 'ios' ? true : false,
+          startDate : startDate,
+        });
+      }
+
+      setDateSecond = (event, endDate) => {
+        endDate = endDate || this.state.endDate;
+    
+        this.setState({
+        //   show: Platform.OS === 'ios' ? true : false,
+          endDate : endDate,
+        });
+      }
+    
+      show = (mode : string) => {
+        this.setState({
+          show: true,
+          mode,
+        });
+      }
+    
+    //   datepicker = () => {
+    //     this.show('date');
+    //   }
+    
+      timepicker = () => {
+        this.show('time');
+      }
+    
 
     componentWillMount() {
         this.props.GetReport(this.state.startDate.toISOString().slice(8, 10) + "." +
@@ -105,7 +148,7 @@ class Report extends Component<Props, State> {
                     <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity
                             style={styles.dateContainer}
-                            onPress={() => { this.startDateSheet.open() }}>
+                            onPress={() => { this.setState({show:true,showSecond:false}) }}>
                             <Text style={styles.reportDateText1}>Başlangıç Tarihi:</Text>
                             <Text style={styles.reportDateText2}>
                                 {this.state.startDate.toISOString().slice(8, 10) + "." +
@@ -115,7 +158,7 @@ class Report extends Component<Props, State> {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.dateContainer}
-                            onPress={() => { this.endDateSheet.open() }}>
+                            onPress={() => { this.setState({showSecond:true,show:false}) }}>
                             <Text style={styles.reportDateText1}>Bitiş Tarihi:</Text>
                             <Text style={styles.reportDateText2}>
                                 {this.state.endDate.toISOString().slice(8, 10) + "." +
@@ -154,20 +197,20 @@ class Report extends Component<Props, State> {
     render() {
         return (
             <View style={styles.container}>
-                <StatusBar backgroundColor="#2B6EDC" />
-                <KeyboardAvoidingView
+                {/* <StatusBar backgroundColor="#2B6EDC" /> */}
+                <KeyboardAvoidingView style={{flex:1}}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                 >
-                    <View style={{ marginTop: 10 }}></View>
-                </KeyboardAvoidingView>
+                    {/* <View style={{ marginTop: 10 }}></View> */}
+                
                 {this._renderView()}
 
-                <RBSheet
+                {/* <RBSheet
                     ref={ref => {
                         this.startDateSheet = ref;
                     }}
-                    height={200}
-                    duration={200}
+                    height={500}
+                    duration={500}
                     customStyles={{
                         container: {
                             justifyContent: "flex-start",
@@ -175,42 +218,54 @@ class Report extends Component<Props, State> {
                             paddingLeft: 20
                         }
                     }}
-                >
-                    <View style={{ flex: 1 }}>
-                        <DatePicker
-                            date={this.state.startDate}
-                            onDateChange={startDate => this.setState({ startDate })}
-                            locale='tr'
-                            mode="date"
+                > */}
+                    <View style={{ }}>
+                     
+                
+                  {  this.state.show  && 
+                        
+                            <View style={{}}>
+                                <TouchableOpacity onPress={()=> this.setState({show:false})}><Icon name="close-circle"></Icon></TouchableOpacity>
+                                <DateTimePicker value={this.state.startDate}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={this.setDate} />
+                                </View>
 
-                        />
+                      }
                     </View>
-                </RBSheet>
-                <RBSheet
-                    ref={ref => {
-                        this.endDateSheet = ref;
-                    }}
-                    height={200}
-                    duration={200}
-                    customStyles={{
-                        container: {
-                            justifyContent: "flex-start",
-                            alignItems: "flex-start",
-                            paddingLeft: 20
-                        }
-                    }}
-                >
-                    <View style={{ flex: 1 }}>
-                        <DatePicker
-                            date={this.state.endDate}
+                {/* </RBSheet> */}
+              
+                    <View style={{ }}>
+
+
+                        {/* <DateTimePicker
+                            value={this.state.endDate}
                             minimumDate = {this.state.startDate}
-                            onDateChange={endDate => this.setState({ endDate })}
+                            onChange={endDate => this.setState({ endDate })}
                             locale='tr'
                             mode="date"
 
-                        />
+                        /> */}
+
+{  this.state.showSecond  && 
+                        
+                        <View style={{}}>
+                            <TouchableOpacity onPress={()=> this.setState({showSecond:false})}><Icon name="ios-arrow-round-forward" size={30} color={"#EBEDF1"} /></TouchableOpacity>
+                            <DateTimePicker value={this.state.endDate}
+                            minimumDate={this.state.startDate}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={this.setDateSecond} />
+                            </View>
+
+                  }
+
                     </View>
-                </RBSheet>
+
+                </KeyboardAvoidingView>
             </View>
         );
     }

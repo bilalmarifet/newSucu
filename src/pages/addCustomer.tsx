@@ -64,8 +64,8 @@ const girdiler = Yup.object().shape({
     // .required("*Zorunlu Alan"),
   fountainCount: Yup.number()
     .positive("*Pozitif değer giriniz.")
-    .required("*Zorunlu Alan")
-    .moreThan(0),
+
+
 });
 
 

@@ -21,6 +21,7 @@ import {Input} from "react-native-elements"
 import { Formik } from "formik";
 import * as Yup from "yup";
 import {customerPriceEdit} from "../redux/actions/customerPriceEditAction"
+import RBSheet from "react-native-raw-bottom-sheet";
 
 
 interface Props {
@@ -40,11 +41,7 @@ interface State {
 }
 
 const girdiler = Yup.object().shape({
-    price: Yup.number()
-    .positive()
-    .min(1)
-    .max(30)
-    .required(),
+
   });
 
 interface priceData {
@@ -58,6 +55,9 @@ interface priceData {
   
 
 class Products extends Component<Props, State> {
+
+  OrderSheet: any;
+  AmountSheet: any;
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -67,6 +67,50 @@ class Products extends Component<Props, State> {
       modalAmountVisible:false,
       customerPriceId:0,
     };
+  }
+
+  addCash() {
+    this.OrderSheet.close();
+    this.AmountSheet.open();
+
+  }
+
+
+
+  _renderEmployeeCostSheetContent() {
+    return (<View style={styles.SheetAmountContainer}>
+      <Formik
+        initialValues={{price : ""}}
+        // validationSchema={girdiler}
+        onSubmit={values => this.odemeAl(values)}
+      >
+        {props => {
+          return (
+            <View style={{ flexDirection: "row" }}>
+              <View style={styles.inputFiyatContainer}>
+                <Input
+                  containerStyle={{ width: '80%' }}
+                  style={styles.inputFiyat}
+                  placeholder="Ürün Fiyatı"
+                  placeholderTextColor="#9A9A9A"
+                  value={props.values.price }
+                  autoCapitalize="none"
+                  keyboardType="numeric"
+                  onChangeText={props.handleChange("price")}
+                  onBlur={props.handleBlur("price")}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.SheetButtonContainer}
+                onPress={props.handleSubmit}>
+                <Text style={styles.amountButtonText}> Ekle </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </Formik>
+    </View>);
+
   }
 
   static navigationOptions =  ({navigation}:Props) => {
@@ -101,6 +145,8 @@ class Products extends Component<Props, State> {
     this.setState({modalVisible:true,
                 customerPriceId: customerPriceId,
                 unitPrice:unitPrice,});
+
+                this.AmountSheet.open();
   }
 
   closeModal() {
@@ -123,15 +169,19 @@ class Products extends Component<Props, State> {
   }
 
   odemeAl(values: priceData){
-    this.props.customerPriceEdit(Number(values.price),this.state.customerPriceId);
-    this.closeAmountModal();
-    this.onRefresh();
-    this.componentWillMount();
+    console.log(values.price)
+      console.log(this.state.customerPriceId)
+    this.props.customerPriceEdit(Number(values.price.replace(",",".")),this.state.customerPriceId);
+    // this.closeAmountModal();
+    this.AmountSheet.close();
+    // this.onRefresh();
+    // this.componentWillMount();
   }
 
   onRefresh() {
     this.setState({ refreshing: true });
-    this.componentWillMount();
+    this.setState({ refreshing: false });
+    // this.componentWillMount();
   }
 
 _renderView(){
@@ -174,6 +224,26 @@ _renderView(){
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
+
+
+<RBSheet
+              ref={ref => {
+                this.AmountSheet = ref;
+              }}
+              height={100}
+              duration={200}
+              customStyles={{
+                container: {
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  paddingLeft: 20
+                }
+              }}
+            >
+              {this._renderEmployeeCostSheetContent()}
+            </RBSheet>
+
+
          <Modal            
               visible={this.state.modalVisible}
               animationType={'slide'}

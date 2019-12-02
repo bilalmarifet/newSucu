@@ -256,8 +256,8 @@ class Employee extends Component<Props, State> {
     );
   }
 
-  _renderEmployeeCostSheetContent() {
-    return (<View style={styles.SheetAmountContainer}>
+  _renderEmployeeCostSheetContent(){
+    return(<View style={styles.SheetAmountContainer}>
       <Formik
         initialValues={initialValues}
         validationSchema={girdiler}
@@ -265,7 +265,7 @@ class Employee extends Component<Props, State> {
       >
         {props => {
           return (
-            <View style={{ flexDirection: "row" }}>
+            <View style={{flexDirection:"row"}}>
               <View style={styles.inputFiyatContainer}>
                 <Input
                   containerStyle={{ width: '80%' }}
@@ -288,7 +288,7 @@ class Employee extends Component<Props, State> {
           );
         }}
       </Formik>
-    </View>);
+</View>);
 
   }
 
@@ -343,11 +343,6 @@ class Employee extends Component<Props, State> {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <View style={{margin:2}}></View>
-            <TouchableOpacity style={styles.employeeCostContainer}
-            onPress={() => this.props.navigation.navigate("EmployeeCost")}>
-            <Text style={styles.employeeCostButtonText}>Çalışan Giderleri</Text>
-          </TouchableOpacity>
 
             <RBSheet
               ref={ref => {
@@ -366,22 +361,63 @@ class Employee extends Component<Props, State> {
               {this._renderEmployeeSheetContent()}
             </RBSheet>
 
+            <Modal
+              visible={this.state.modalVisible}
+              animationType={'slide'}
+              onRequestClose={() => this.closeModal()}
+              transparent={true}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.innerContainer}>
+                  <TouchableOpacity style={styles.modalCancelButtonContainer}
+                    onPress={() => this.closeModal()}>
+                    <Icon name="md-close" size={30} color={"#6E6E6E"} />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.modalEditButtonContainer}
+                    onPress={() => this.editEmployee()}>
+                    <Text style={styles.modalEditButtonText}
+                    >Düzenle</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.modalCostButtonContainer}
+                    onPress={() => this.addCash()}>
+                    <Text style={styles.modalCostButtonText}
+                    >Gider Ekle</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.modalDeleteButtonContainer}
+                    onPress={() => this.deleteEmployeeAlert()}>
+                    <Text style={styles.modalDeleteButtonText}
+                    >Sil</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+
+
             <RBSheet
-              ref={ref => {
-                this.AmountSheet = ref;
-              }}
-              height={100}
-              duration={200}
-              customStyles={{
-                container: {
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
-                  paddingLeft: 20
-                }
-              }}
+          ref={ref => {
+            this.AmountSheet = ref;
+          }}
+            height={100}
+            duration={200}
+            customStyles={{
+              container: {
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                paddingLeft:20
+              }
+            }}
+          >
+           {this._renderEmployeeCostSheetContent()}
+          </RBSheet>
+
+            <Modal
+              visible={this.state.modalAmountVisible}
+              animationType={'slide'}
+              onRequestClose={() => this.closeAmountModal()}
+              transparent={true}
             >
               {this._renderEmployeeCostSheetContent()}
-            </RBSheet>
+            </Modal>
             <View style={{ marginTop: 10 }}></View>
           </KeyboardAvoidingView>
           {this._renderView()} 
