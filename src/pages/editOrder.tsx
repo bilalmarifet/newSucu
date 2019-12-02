@@ -252,6 +252,15 @@ class editOrder extends Component<Props, State> {
                       />
                       </View>
                       <View style={{margin:2}}></View>
+                      <CheckBox
+                        containerStyle={styles.chechBoxContainer}             
+                        title='Peşin Ödeme'
+                        checkedIcon='dot-circle-o'
+                        uncheckedIcon='circle-o'
+                        checked={this.state.isPaid}
+                        onPress={() => this.setState({ isPaid: !this.state.isPaid })}
+                      />
+
                         <Text style={styles.odenecekText}>Toplam Fiyat: {(Number(props.values.unitPrice) * Number(props.values.count))} TL</Text>
                       <TouchableOpacity style={styles.siparisButtonContainer}>
                         <Text style={styles.amountButtonText}
