@@ -10,4 +10,5 @@ export interface IOrderItem
     productName: string,
     productCode: string,
     dateTime: string,
+    isPaid:boolean,
 }

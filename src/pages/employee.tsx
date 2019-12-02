@@ -27,6 +27,7 @@ import { Input } from "react-native-elements";
 import { employeeCost } from "../redux/actions/employeeCostAction"
 import { timingSafeEqual } from "crypto";
 import { type } from "os";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 
 interface Props {
@@ -65,6 +66,8 @@ const girdiler = Yup.object().shape({
 });
 
 class Employee extends Component<Props, State> {
+  OrderSheet: any;
+  AmountSheet: any;
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -86,33 +89,33 @@ class Employee extends Component<Props, State> {
     });
   }
   static navigationOptions = ({ navigation }: Props) => {
-      if(navigation.getParam("Type")==="2"){
-        return {
-          title: 'Çalışanlar',
-          headerStyle: {
-            backgroundColor: '#2B6EDC',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }
+    if (navigation.getParam("Type") === "2") {
+      return {
+        title: 'Çalışanlar',
+        headerStyle: {
+          backgroundColor: '#2B6EDC',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       }
-      else{
-        return {
-          title: 'Çalışanlar',
-          headerRight: <TouchableOpacity style={{ marginRight: 20 }} onPress={() => navigation.navigate("AddEmployee")}>
-            <Icon name="ios-add" size={40} style={{ color: 'white' }} />
-          </TouchableOpacity>,
-          headerStyle: {
-            backgroundColor: '#2B6EDC',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }
+    }
+    else {
+      return {
+        title: 'Çalışanlar',
+        headerRight: <TouchableOpacity style={{ marginRight: 20 }} onPress={() => navigation.navigate("AddEmployee")}>
+          <Icon name="ios-add" size={40} style={{ color: 'white' }} />
+        </TouchableOpacity>,
+        headerStyle: {
+          backgroundColor: '#2B6EDC',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       }
+    }
   };
 
 
@@ -128,12 +131,12 @@ class Employee extends Component<Props, State> {
 
   openModal(employeeId: number, nameSurname: string, monthlySalary: number, active: boolean) {
     this.setState({
-      modalVisible: true,
       employeeId: employeeId,
       nameSurname: nameSurname,
       monthlySalary: monthlySalary,
       active: active,
     });
+    this.OrderSheet.open();
   }
 
   closeModal() {
@@ -149,15 +152,16 @@ class Employee extends Component<Props, State> {
   }
 
   addCash() {
-    this.closeModal();
-    this.openAmountModal();
+    this.OrderSheet.close();
+    this.AmountSheet.open();
 
   }
 
   deleteSelectedEmployee() {
+    console.log("fsafafsfas")
     const { employeeDelete } = this.props;
     employeeDelete(this.state.employeeId);
-    this.closeModal();
+    this.OrderSheet.close();
     this.onRefresh();
     this.componentWillMount();
   }
@@ -191,7 +195,7 @@ class Employee extends Component<Props, State> {
 
   giderEkle(values: amountData) {
     this.props.employeeCost(this.state.employeeId, Number(values.amount));
-    this.closeAmountModal();
+    this.AmountSheet.close();
     this.onRefresh();
 
   }
@@ -208,7 +212,78 @@ class Employee extends Component<Props, State> {
         UserType: value,
       })
       this.props.navigation.setParams({ Type: value });
-    });  
+    });
+  }
+
+  _renderEmployeeSheetContent() {
+    return (
+
+      <View style={styles.SheetContainer}>
+        <TouchableOpacity style={styles.SheetItemContainer}
+          onPress={() => {
+            this.OrderSheet.close();
+            this.addCash();
+          }}>
+          <Icon name="ios-add" size={30} style={styles.SheetItemIcon}></Icon>
+          <Text style={styles.SheetItemText}
+          >Ödeme Ekle</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.SheetItemContainer}
+          onPress={() => {
+            this.OrderSheet.close();
+            this.editEmployee();
+          }}>
+          <Icon name="ios-arrow-round-forward" size={30} style={styles.SheetItemIcon}></Icon>
+          <Text style={styles.SheetItemText}
+          >Düzenle</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.SheetItemContainer}
+          onPress={() => {
+            this.OrderSheet.close();
+            this.deleteEmployeeAlert();
+          }}>
+          <Icon name="ios-trash" size={30} style={styles.SheetItemIcon}></Icon>
+          <Text style={styles.SheetItemText}
+          >Sil</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  _renderEmployeeCostSheetContent(){
+    return(<View style={styles.SheetAmountContainer}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={girdiler}
+        onSubmit={values => this.giderEkle(values)}
+      >
+        {props => {
+          return (
+            <View style={{flexDirection:"row"}}>
+              <View style={styles.inputFiyatContainer}>
+                <Input
+                  containerStyle={{ width: '80%' }}
+                  style={styles.inputFiyat}
+                  placeholder="Ürün Fiyatı"
+                  placeholderTextColor="#9A9A9A"
+                  value={props.values.amount + ""}
+                  autoCapitalize="none"
+                  keyboardType="numeric"
+                  onChangeText={props.handleChange("amount")}
+                  onBlur={props.handleBlur("amount")}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.SheetButtonContainer}
+                onPress={props.handleSubmit}>
+                <Text style={styles.amountButtonText}> Ekle </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </Formik>
+</View>);
+
   }
 
   _renderView() {
@@ -259,6 +334,24 @@ class Employee extends Component<Props, State> {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
+
+            <RBSheet
+              ref={ref => {
+                this.OrderSheet = ref;
+              }}
+              height={250}
+              duration={200}
+              customStyles={{
+                container: {
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  paddingLeft: 20
+                }
+              }}
+            >
+              {this._renderEmployeeSheetContent()}
+            </RBSheet>
+
             <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
@@ -289,6 +382,24 @@ class Employee extends Component<Props, State> {
                 </View>
               </View>
             </Modal>
+
+
+            <RBSheet
+          ref={ref => {
+            this.AmountSheet = ref;
+          }}
+            height={100}
+            duration={200}
+            customStyles={{
+              container: {
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                paddingLeft:20
+              }
+            }}
+          >
+           {this._renderEmployeeCostSheetContent()}
+          </RBSheet>
 
             <Modal
               visible={this.state.modalAmountVisible}

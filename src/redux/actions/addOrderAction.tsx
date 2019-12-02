@@ -5,7 +5,7 @@ import {ADD_ORDER_SUCCEED,ADD_ORDER_FAILED} from './../types'
 import {Action} from '../states'
 
 
-export function AddOrder(productId:number, customerId:number,unitPrice:number, count:number) {
+export function AddOrder(productId:number, customerId:number,unitPrice:number, count:number,isPaid:boolean) {
   return (dispatch : Dispatch<Action>) =>  {
 
   axios.post(WATER_ADD_ORDER,
@@ -14,6 +14,7 @@ export function AddOrder(productId:number, customerId:number,unitPrice:number, c
         customerId: customerId,
         unitPrice: unitPrice,
         count: count,
+        isPaid:isPaid,
     })
   .then((response) =>{
   if(response.data.isSuccess){

@@ -35,6 +35,7 @@ export function GetCustomers(orderType: number, searchText: string, dayOfWeek: n
               displayTookTotalAmount: customer.displayTookTotalAmount,
               dayOfWeek: customer.dayOfWeek,
               fountainCount: customer.fountainCount,
+              dayOfWeeks: customer.dayOfWeeks,
             }
             customersModel.push(customerItem);
           });
@@ -83,7 +84,9 @@ export function GetCustomerMore(orderType: number, searchText: string, dayOfWeek
               displayRestTotalAmount: customer.displayRestTotalAmount,
               restTotalAmount: customer.restTotalAmount,
               displayTookTotalAmount: customer.displayTookTotalAmount,
-              dayOfWeek: customer.dayOfWeek
+              dayOfWeek: customer.dayOfWeek,
+              fountainCount: customer.fountainCount,
+              dayOfWeeks: customer.dayOfWeeks,
             }
             customersModel.push(customerItem);
           });

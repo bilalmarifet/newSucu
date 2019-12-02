@@ -38,6 +38,7 @@ export function GetOrders(customerId:number,pageIndex:number,pageSize:number) {
                     productName: order.productName,
                     productCode: order.productCode,
                     dateTime: order.dateTime,
+                    isPaid: order.isPaid,
             }
             orderModel.push(orderItem);         
       });
@@ -93,6 +94,7 @@ if(response.data.isSuccess){
                   productName: order.productName,
                   productCode: order.productCode,
                   dateTime: order.dateTime,
+                  isPaid: order.isPaid,
           }
           orderModel.push(orderItem);         
     });

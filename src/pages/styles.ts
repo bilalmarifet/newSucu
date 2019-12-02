@@ -53,9 +53,7 @@ const styles = StyleSheet.create({
     //marginBottom:5,
     paddingTop: 0,
     height: 50,
-  marginTop:10,
-    borderRadius: 4,
-    borderColor: "#333",
+    marginTop: 10,
     //flex:1,
   },
   inputFiyat: {
@@ -84,11 +82,10 @@ const styles = StyleSheet.create({
   },
 
   inputFiyatContainer: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'flex-start',
     flexDirection: "row",
-    backgroundColor: "#E2E7F5",
     // marginHorizontal:5,
-    borderRadius: 5
+    borderRadius: 5,
 
   },
 
@@ -386,6 +383,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
   },
+  odenecekText:{
+    textAlign: "left",
+    color: "#4B3A3A",
+    margin:10,
+    includeFontPadding: false,
+    flex: 1.1,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 
   searchInput: {
     elevation: 2,
@@ -622,11 +628,22 @@ const styles = StyleSheet.create({
 
   },
   chechBoxContainer: {
-    elevation: 2,
-    borderRadius: 2,
+    width:"100%",
     marginHorizontal: 20,
     justifyContent: "space-between",
     flex: 4,
+    right:10,
+    backgroundColor:"white"
+  },
+
+  chechBoxGunlerContainer: {
+    padding:0,
+    margin:1,
+    width:"100%",
+    justifyContent: "space-between",
+    flex: 4,
+    right:10,
+    backgroundColor:"white"
   },
 
   productUrunfiyatText: {
@@ -782,6 +799,9 @@ const styles = StyleSheet.create({
   SheetContainer: {
     flex: 1, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', paddingTop: 10
   },
+  SheetAmountContainer: {
+    flex: 1, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', paddingTop: 10
+  },
   SheetItemContainer: {
     borderBottomColor: "#ccc", flexDirection: 'row', paddingTop: 10, borderBottomWidth: 1, paddingBottom: 15, width: '100%'
   },
@@ -794,9 +814,23 @@ const styles = StyleSheet.create({
   },
   FormLabel: {
     fontSize: 17,
-    color:'#333'
+    color: '#333'
   },
-  PickerColor:{
+
+  SheetButtonContainer: {
+    backgroundColor: "#2B6EDC",
+    flexDirection: 'row',
+    paddingTop: 10,
+    borderBottomWidth: 1,
+    paddingBottom: 15,
+    width: '100%',
+    borderRadius: 5,
+    flex: 1,
+    justifyContent: "center",
+    margin:5,
+    right:30,
+  },
+  PickerColor: {
     backgroundColor: '#E2E7F5'
   }
 });

@@ -5,7 +5,7 @@ import {UPDATE_ORDER_SUCCEED,UPDATE_ORDER_FAILED} from './../types'
 import {Action} from '../states'
 
 
-export function EditOrder(orderId:number,productId:number, customerId:number,unitPrice:number, count:number) {
+export function EditOrder(orderId:number,productId:number, customerId:number,unitPrice:number, count:number,isPaid:boolean) {
   return (dispatch : Dispatch<Action>) =>  {
 
   axios.post(WATER_CUSTOMER_ORDER_UPDATE,
@@ -15,6 +15,7 @@ export function EditOrder(orderId:number,productId:number, customerId:number,uni
         customerId: customerId,
         unitPrice: unitPrice,
         count: count,
+        isPaid:isPaid,
     })
   .then((response) =>{
   if(response.data.isSuccess){

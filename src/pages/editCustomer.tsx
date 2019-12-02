@@ -20,12 +20,12 @@ import { connect } from "react-redux";
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from "react-native-vector-icons/Ionicons";
 import { GetUser } from "../redux/actions/getUserAction"
-import { Input } from "react-native-elements";
+import { Input, CheckBox } from "react-native-elements";
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState>;
   isSuccees: boolean;
-  customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number, fountainCount: number) => void;
+  customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number, fountainCount: number,dayOfWeeks:string) => void;
   CustomerEditMessage: string;
   musteri: customerData;
   GetUser: (employeeId: number) => void;
@@ -56,6 +56,14 @@ const girdiler = Yup.object().shape({
 
 interface State {
   dayOfWeek: number;
+  tumgunler: boolean;
+  pazartesi: boolean;
+  sali: boolean;
+  carsamba: boolean;
+  persembe: boolean;
+  cuma: boolean;
+  cumartesi: boolean;
+  pazar: boolean;
 }
 class editCustomer extends Component<Props, State> {
 
@@ -88,8 +96,63 @@ class editCustomer extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      dayOfWeek: 0
+      dayOfWeek: 0,
+      tumgunler: false,
+      pazartesi: false,
+      sali: false,
+      carsamba: false,
+      persembe: false,
+      cuma: false,
+      cumartesi: false,
+      pazar: false,
     };
+  }
+
+  componentWillMount(){
+    var musteriAdiSoyadi: string = this.props.navigation.getParam("dayOfWeeks");
+    console.log(musteriAdiSoyadi)
+    musteriAdiSoyadi.split(",").forEach(value=> {
+      if(value==="0"){
+        this.setState({
+          tumgunler:true,
+        })
+      }
+      if(value==="1"){
+        this.setState({
+          pazartesi:true,
+        })
+      }
+      if(value==="2"){
+        this.setState({
+          sali:true,
+        })
+      }
+      if(value==="3"){
+        this.setState({
+          carsamba:true,
+        })
+      }
+      if(value==="4"){
+        this.setState({
+          persembe:true,
+        })
+      }
+      if(value==="5"){
+        this.setState({
+          cuma:true,
+        })
+      }
+      if(value==="6"){
+        this.setState({
+          cumartesi:true,
+        })
+      }
+      if(value==="7"){
+        this.setState({
+          pazar:true,
+        })
+      }
+    } )
   }
 
   handleAlert() {
@@ -107,8 +170,35 @@ class editCustomer extends Component<Props, State> {
   }
 
   handleEditCustomer(values: customerData) {
+    var gunler: string = "";
+    if (this.state.tumgunler) {
+      gunler += "0";
+    }
+    else {
+      if (this.state.pazartesi) {
+        gunler += "1,"
+      }
+      if (this.state.sali) {
+        gunler += "2,"
+      }
+      if (this.state.carsamba) {
+        gunler += "3,"
+      }
+      if (this.state.persembe) {
+        gunler += "4,"
+      }
+      if (this.state.cuma) {
+        gunler += "5,"
+      }
+      if (this.state.cumartesi) {
+        gunler += "6,"
+      }
+      if (this.state.pazar) {
+        gunler += "7,"
+      }
+    }
     const { customerEdit, isSuccees, navigation } = this.props;
-    customerEdit(this.props.navigation.getParam("customerId"), values.musteriAdiSoyadi, values.sirketAdi, this.state.dayOfWeek, values.fountainCount);
+    customerEdit(this.props.navigation.getParam("customerId"), values.musteriAdiSoyadi, values.sirketAdi, this.state.dayOfWeek, values.fountainCount,gunler);
     this.handleAlert();
   };
 
@@ -203,8 +293,9 @@ class editCustomer extends Component<Props, State> {
 
                         />
                       </View>
+                      <View style={{margin:5}}></View>
                       <Text style={styles.FormLabel}>Ödeme Alınacak Gün</Text>
-                      <View style={styles.rnpickerselect}>
+                      {/* <View style={styles.rnpickerselect}>
                         <RNPickerSelect
                           style={styles.pickerSelectStyles}
                           placeholder={placeHolderDay}
@@ -224,7 +315,77 @@ class editCustomer extends Component<Props, State> {
                             return <Icon name="md-arrow-down" size={24} color="gray" style={{ top: Platform.OS == 'ios' ? 0 : 15 }} />;
                           }}
                         />
+                      </View> */}
+
+                      <View>
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Tüm Günler'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.tumgunler}
+                          onPress={() => this.setState({ tumgunler: !this.state.tumgunler })}
+                        />
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Pazartesi'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.pazartesi}
+                          onPress={() => this.setState({ pazartesi: !this.state.pazartesi })}
+                        />
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Salı'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.sali}
+                          onPress={() => this.setState({ sali: !this.state.sali })}
+                        />
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Çarşamba'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.carsamba}
+                          onPress={() => this.setState({ carsamba: !this.state.carsamba })}
+                        />
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Perşembe'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.persembe}
+                          onPress={() => this.setState({ persembe: !this.state.persembe })}
+                        />
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Cuma'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.cuma}
+                          onPress={() => this.setState({ cuma: !this.state.cuma })}
+                        />
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Cumartesi'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.cumartesi}
+                          onPress={() => this.setState({ cumartesi: !this.state.cumartesi })}
+                        />
+                        <CheckBox
+                          containerStyle={styles.chechBoxGunlerContainer}
+                          title='Pazar'
+                          checkedIcon='dot-circle-o'
+                          uncheckedIcon='circle-o'
+                          checked={this.state.pazar}
+                          onPress={() => this.setState({ pazar: !this.state.pazar })}
+                        />
+
+
                       </View>
+
                       <TouchableOpacity
                         style={styles.customerEditButton}
                         onPress={props.handleSubmit}>
@@ -249,8 +410,8 @@ const mapStateToProps = (state: AppState) => ({
 
 function bindToAction(dispatch: any) {
   return {
-    customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number, fountainCount: number) =>
-      dispatch(customerEdit(id, nameSurname, companyName, dayOfWeek, fountainCount)),
+    customerEdit: (id: number, nameSurname: string, companyName: string, dayOfWeek: number, fountainCount: number,dayOfWeeks:string) =>
+      dispatch(customerEdit(id, nameSurname, companyName, dayOfWeek, fountainCount,dayOfWeeks)),
     GetUser: (employeeId: number) =>
       dispatch(GetUser(employeeId)),
   };

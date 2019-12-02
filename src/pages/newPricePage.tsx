@@ -185,7 +185,7 @@ class addOrder extends Component<Props, State> {
                         
                         placeholder="Ürün Fiyatı"
                         placeholderTextColor="#9A9A9A"
-                        keyboardType="number-pad"
+                        keyboardType="numeric"
                         value={props.values.price}
                         onChangeText={props.handleChange("price")}
                         onBlur={props.handleBlur("price")}

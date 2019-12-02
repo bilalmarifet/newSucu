@@ -10,5 +10,6 @@ export interface ICustomerItem{
     displayTookTotalAmount:string;
     dayOfWeek ? : number;
     fountainCount?: number;
+    dayOfWeeks?:string;
 
 }

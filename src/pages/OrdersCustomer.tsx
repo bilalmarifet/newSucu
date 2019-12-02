@@ -48,6 +48,7 @@ interface State {
   productId: number;
   productName: string;
   page: number;
+  isPaid:boolean;
 }
 
 const girdiler = Yup.object().shape({
@@ -79,6 +80,9 @@ class OrdersCustomer extends Component<Props, State> {
       },
     }
   };
+  OrderSheet: any;
+  CustomerSheet: any;
+  AmountSheet: any;
 
   constructor(props: Props) {
     super(props);
@@ -93,7 +97,8 @@ class OrdersCustomer extends Component<Props, State> {
       count: 0,
       productId: 0,
       productName: "",
-      page: 0
+      page: 0,
+      isPaid:false,
     };
   }
 
@@ -161,18 +166,19 @@ class OrdersCustomer extends Component<Props, State> {
   }
 
   addCash() {
-    this.closeModal();
-    this.openAmountModal();
+    this.OrderSheet.close();
+    this.AmountSheet.open();
 
   }
 
-  openModal(orderId: number, unitPrice: number, count: number, productId: number, productName: string) {
+  openModal(orderId: number, unitPrice: number, count: number, productId: number, productName: string,isPaid:boolean) {
     this.setState({
       orderId: orderId,
       unitPrice: unitPrice,
       count: count,
       productId: productId,
       productName: productName,
+      isPaid: isPaid,
     });
     this.OrderSheet.open();
   }
@@ -209,7 +215,7 @@ class OrdersCustomer extends Component<Props, State> {
 
   odemeAl(values: amountData) {
     this.props.AddCash(this.state.orderId, values.amount);
-    this.closeAmountModal();
+    this.AmountSheet.close();
     this.onRefresh();
 
   }
@@ -242,7 +248,7 @@ class OrdersCustomer extends Component<Props, State> {
                   item.dateTime.slice(11, 16)}</Text>
                 <TouchableOpacity
                   style={styles.iconButtonOrder}
-                  onPress={() => this.openModal(item.orderId, item.unitPrice, item.count, item.productId, item.productName)}>
+                  onPress={() => this.openModal(item.orderId, item.unitPrice, item.count, item.productId, item.productName,item.isPaid)}>
                   <Icon name="md-more" size={24} color={"#C4B47B"} />
                 </TouchableOpacity>
               </View>
@@ -302,6 +308,42 @@ class OrdersCustomer extends Component<Props, State> {
       </TouchableOpacity>
 
     </View>);
+  }
+
+  _renderAddAmountSheetContent(){
+    return(<View style={styles.SheetAmountContainer}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={girdiler}
+            onSubmit={values => this.odemeAl(values)}
+          >
+            {props => {
+              return (
+                <View style={{flexDirection:"row"}}>
+                  <View style={styles.inputFiyatContainer}>
+                    <Input
+                      containerStyle={{ width: '80%' }}
+                      style={styles.inputFiyat}
+                      placeholder="Ürün Fiyatı"
+                      placeholderTextColor="#9A9A9A"
+                      value={props.values.amount + ""}
+                      autoCapitalize="none"
+                      keyboardType="numeric"
+                      onChangeText={props.handleChange("amount")}
+                      onBlur={props.handleBlur("amount")}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={styles.SheetButtonContainer}
+                    onPress={props.handleSubmit}>
+                    <Text style={styles.amountButtonText}> Ekle </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
+          </Formik>
+    </View>);
+
   }
 
   _renderOrderSheetContent(){
@@ -383,6 +425,24 @@ class OrdersCustomer extends Component<Props, State> {
             }}
           >
            {this._renderOrderSheetContent()}
+          </RBSheet>
+
+          
+          <RBSheet
+          ref={ref => {
+            this.AmountSheet = ref;
+          }}
+            height={100}
+            duration={200}
+            customStyles={{
+              container: {
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                paddingLeft:20
+              }
+            }}
+          >
+           {this._renderAddAmountSheetContent()}
           </RBSheet>
 
 

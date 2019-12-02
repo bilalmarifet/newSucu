@@ -57,6 +57,7 @@ interface State {
   error: boolean;
   customersData: ICustomerItem[];
   fountainCount?: number;
+  dayOfWeeks?: string;
 
 }
 
@@ -92,6 +93,7 @@ class Customer extends Component<Props, State> {
       fontWeight: 'bold',
     },
   });
+  CustomerListSheet: any;
   // static navigationOptions = ({ navigation }) => {
   //   return {
   //     headerTitle: () => <Text>Müşteriler</Text>,
@@ -135,6 +137,7 @@ class Customer extends Component<Props, State> {
       error: false,
       customersData: [],
       fountainCount: 0,
+      dayOfWeeks:"",
     };
   }
   search() {
@@ -164,13 +167,14 @@ class Customer extends Component<Props, State> {
 
   }
 
-  openModal(customerId: number, nameSurname: string, companyName: string, dayOfWeek?: number, fountainCount?: number) {
+  openModal(customerId: number, nameSurname: string, companyName: string, dayOfWeek?: number, fountainCount?: number,dayOfWeeks?:string) {
     this.setState({
       customerId: customerId,
       nameSurname: nameSurname,
       companyName: companyName,
       dayOfWeekCustomer: dayOfWeek,
       fountainCount: fountainCount === null ? 0 : fountainCount,
+      dayOfWeeks: dayOfWeeks,
     });
     this.CustomerListSheet.open();
   }
@@ -234,6 +238,7 @@ class Customer extends Component<Props, State> {
         companyName: this.state.companyName,
         dayofWeekCustomer: this.state.dayOfWeekCustomer,
         fountainCount: this.state.fountainCount,
+        dayOfWeeks: this.state.dayOfWeeks,
       })
 
   }
@@ -309,7 +314,7 @@ class Customer extends Component<Props, State> {
                   <TouchableOpacity
                     style={styles.iconButtonCustomer}
 
-                    onPress={() => this.openModal(item.customerId, item.nameSurname, item.companyName, item.dayOfWeek, item.fountainCount)}>
+                    onPress={() => this.openModal(item.customerId, item.nameSurname, item.companyName, item.dayOfWeek, item.fountainCount,item.dayOfWeeks)}>
 
                     <Icon name="md-more" size={24} color={"#C4B47B"} />
                   </TouchableOpacity>
@@ -381,7 +386,7 @@ class Customer extends Component<Props, State> {
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <Modal
+          {/* <Modal
 
             visible={this.state.modalVisible}
             animationType={'slide'}
@@ -393,7 +398,7 @@ class Customer extends Component<Props, State> {
 
               </View>
             </View>
-          </Modal>
+          </Modal> */}
           <View style={{ marginTop: 10 }}></View>
           <ScrollView bounces={false}>
 
