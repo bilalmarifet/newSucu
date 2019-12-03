@@ -6,7 +6,8 @@ import {IDefinedCustomerPriceItem} from "./models/customerDefinedPriceModel"
 import {IProductForCustomerItem} from "./models/productForCustomerModel"
 import {IEmployeeItem} from "./models/employeeModel"
 import { IUserItem } from "./models/addUserModel";
-import { IGetUserItem} from "./models/userModel"
+import { IGetUserItem} from "./models/userModel";
+import {IReportItem } from "./models/reportModel"
 
 export interface State {
     data: any[];
@@ -157,4 +158,9 @@ export interface EmployeeCostAdd
 {
   isSuccess: boolean,
   EmployeeCostAddMessage: string,
+}
+
+export interface ReportState{
+  report:IReportItem;
+  isReportLoading :boolean;
 }

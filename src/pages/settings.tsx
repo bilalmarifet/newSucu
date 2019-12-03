@@ -71,6 +71,10 @@ class Settings extends Component<Props> {
         onPress={()=>this.props.navigation.navigate("Products")}>
           <Text style={styles.addProductButtonText}>Ürünler</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.addProductButtonContainer}
+        onPress={()=>this.props.navigation.navigate("Report")}>
+          <Text style={styles.addProductButtonText}>Rapor</Text>
+        </TouchableOpacity>
         </View>
           
         <TouchableOpacity style={styles.logoutButtonContainer}

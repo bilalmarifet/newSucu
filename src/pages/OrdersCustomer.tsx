@@ -249,7 +249,7 @@ class OrdersCustomer extends Component<Props, State> {
                 <TouchableOpacity
                   style={styles.iconButtonOrder}
                   onPress={() => this.openModal(item.orderId, item.unitPrice, item.count, item.productId, item.productName,item.isPaid)}>
-                  <Icon name="md-more" size={24} color={"#C4B47B"} />
+                  <Icon name="md-reorder" size={24} color={"#C4B47B"} />
                 </TouchableOpacity>
               </View>
               <View style={styles.row_cell3}>

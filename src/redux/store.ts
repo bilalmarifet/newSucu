@@ -21,10 +21,11 @@ import customerPriceEditReducers from  "./reducers/customerPriceEditReducers";
 import productForCustomerReducers from "./reducers/productForCustomerReducers";
 import editOrderReducers from "./reducers/editOrderReducers";
 import employeeReducers from "./reducers/employeeReducers";
-import addEmployeeReducers from "./reducers/addEmployeeReducers"
-import addUserReducers from "./reducers/addUserReducers"
-import deleteEmployeeReducers from "./reducers/deleteEmployeeReducers"
-import getUserReducers from "./reducers/getUserReducers"
+import addEmployeeReducers from "./reducers/addEmployeeReducers";
+import addUserReducers from "./reducers/addUserReducers";
+import deleteEmployeeReducers from "./reducers/deleteEmployeeReducers";
+import getUserReducers from "./reducers/getUserReducers";
+import reportReducers from "./reducers/reportReducers";
  
 const persistConfig = {
   key: "root",
@@ -40,6 +41,7 @@ if (process.env.NODE_ENV === `development`) {
 }
 
 const rootReducer = combineReducers({
+  report: reportReducers,
   getUser: getUserReducers,
   deleteEmployee : deleteEmployeeReducers,
   addUser: addUserReducers,

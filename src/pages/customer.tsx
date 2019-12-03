@@ -316,7 +316,7 @@ class Customer extends Component<Props, State> {
 
                     onPress={() => this.openModal(item.customerId, item.nameSurname, item.companyName, item.dayOfWeek, item.fountainCount,item.dayOfWeeks)}>
 
-                    <Icon name="md-more" size={24} color={"#C4B47B"} />
+                    <Icon name="md-reorder" size={24} color={"#C4B47B"} />
                   </TouchableOpacity>
                 </View>)}
               keyExtractor={(item, index) => String(index)}

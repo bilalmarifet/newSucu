@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
   iconButtonOrder: {
     marginHorizontal: 2,
     paddingLeft: 16,
-    flex: 0.1,
+    flex: 0.22,
     textAlign: "right",
   },
 
