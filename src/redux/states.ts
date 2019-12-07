@@ -8,6 +8,7 @@ import {IEmployeeItem} from "./models/employeeModel"
 import { IUserItem } from "./models/addUserModel";
 import { IGetUserItem} from "./models/userModel";
 import {IReportItem } from "./models/reportModel"
+import {IEmployeeCostItem} from "./models/employeeCostModel"
 
 export interface State {
     data: any[];
@@ -163,4 +164,9 @@ export interface EmployeeCostAdd
 export interface ReportState{
   report:IReportItem;
   isReportLoading :boolean;
+}
+
+export interface GetEmployeeCostState{
+  employees:IEmployeeCostItem[];
+  isLoading :boolean;
 }

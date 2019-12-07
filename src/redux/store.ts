@@ -1,4 +1,4 @@
-import { compose, applyMiddleware, createStore ,combineReducers} from "redux";
+import { compose, applyMiddleware, createStore, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -17,7 +17,7 @@ import addOrderReducers from "./reducers/addOrderReducers";
 import customerPriceGetProductReducers from "./reducers/customerPriceGetProductReducers";
 import addCustomerPriceReducers from "./reducers/addCustomerPriceReducers";
 import customerDefinedPriceReducers from "./reducers/customerDefinedPriceReducers";
-import customerPriceEditReducers from  "./reducers/customerPriceEditReducers";
+import customerPriceEditReducers from "./reducers/customerPriceEditReducers";
 import productForCustomerReducers from "./reducers/productForCustomerReducers";
 import editOrderReducers from "./reducers/editOrderReducers";
 import employeeReducers from "./reducers/employeeReducers";
@@ -26,7 +26,8 @@ import addUserReducers from "./reducers/addUserReducers";
 import deleteEmployeeReducers from "./reducers/deleteEmployeeReducers";
 import getUserReducers from "./reducers/getUserReducers";
 import reportReducers from "./reducers/reportReducers";
- 
+import getEmployeeCostReducers from "./reducers/getEmployeeCostReducers";
+
 const persistConfig = {
   key: "root",
   storage: storage
@@ -41,9 +42,10 @@ if (process.env.NODE_ENV === `development`) {
 }
 
 const rootReducer = combineReducers({
+  getEmployeeCost: getEmployeeCostReducers,
   report: reportReducers,
   getUser: getUserReducers,
-  deleteEmployee : deleteEmployeeReducers,
+  deleteEmployee: deleteEmployeeReducers,
   addUser: addUserReducers,
   addEmployee: addEmployeeReducers,
   employee: employeeReducers,
@@ -56,13 +58,13 @@ const rootReducer = combineReducers({
   addOrder: addOrderReducers,
   productEdit: productEditReducers,
   products: getProductReducers,
-  addCash:addCashReducers,
+  addCash: addCashReducers,
   productAdd: productAddReducers,
-  customerEdit: customerEditReducers, 
+  customerEdit: customerEditReducers,
   customerDelete: customerDeleteReducers,
   customerAdd: customerAddReducers,
   orders: OrderReducers,
-  home : HomeReducers,
+  home: HomeReducers,
   system: reducer,
   login: loginRed,
 })

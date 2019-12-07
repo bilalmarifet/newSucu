@@ -13,6 +13,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
 
+  reportContainer: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "flex-start",
+  },
+
   headStyle: {
     paddingVertical: 30,
     justifyContent: "center",
@@ -36,6 +42,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 20,
     //flex:4,
+  },
+
+  dateContainer: {
+
+    elevation: 1,
+    borderRadius: 2,
+    //marginHorizontal:20,
+    justifyContent: "space-between",
+    padding: 7,
+    flex:0.5,
+    alignItems:'center',
+    margin:5,
   },
   signupLink: {
     flexDirection: "row",
@@ -199,6 +217,15 @@ const styles = StyleSheet.create({
     marginRight: 14,
     marginTop: 5,
     marginBottom: 5,
+  },
+
+  column: {
+    elevation: 6.5,
+    borderRadius: 10,
+    backgroundColor: "white",
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
 
   row_cell1: {
@@ -418,6 +445,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  searchButtonDate: {
+    backgroundColor: '#2B6EDC',
+    elevation: 1,
+    borderRadius: 2,
+    //marginHorizontal:20,
+    justifyContent: "space-between",
+    padding: 7,
+    flex:0.2,
+    alignItems:'center',
+    margin:5,
+  },
+
   search_row: {
     flex: 1,
     height: 50,
@@ -532,9 +571,29 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
 
+  employeeCostContainer: {
+    backgroundColor: '#2B6EDC',
+    // paddingHorizontal:61,
+    // margin:5,
+    borderRadius: 5,
+    // flex:1,
+    // justifyContent:"flex-end"
+    marginBottom: 10,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+  },
+
   logoutButtonText: {
     textAlign: "center",
     color: "#F3CCCC",
+    fontWeight: "900",
+    fontSize: 17,
+    // paddingVertical: 17,
+    // marginHorizontal:10,
+  },
+  employeeCostButtonText: {
+    textAlign: "center",
+    color: "white",
     fontWeight: "900",
     fontSize: 17,
     // paddingVertical: 17,
@@ -832,6 +891,28 @@ const styles = StyleSheet.create({
   },
   PickerColor: {
     backgroundColor: '#E2E7F5'
+  },
+  reportText:{
+    fontSize:18,
+    color:'black',
+    paddingLeft:10,
+    margin:5,
+    borderBottomWidth:1,
+  },
+  reportTextTotalCost:{
+    fontSize:18,
+    color:'black',
+    paddingLeft:10,
+    margin:5,
+    borderBottomWidth:1,
+    fontWeight:'bold',
+  },
+  reportDateText1:{
+    fontSize:12,
+  },
+  reportDateText2:{
+    fontSize:15,
+    fontWeight:'bold'
   }
 });
 

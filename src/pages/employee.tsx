@@ -118,11 +118,6 @@ class Employee extends Component<Props, State> {
     }
   };
 
-
-
-
-
-
   componentWillMount() {
     this.props.GetEmployees();
     this.setState({ refreshing: false });
@@ -250,8 +245,8 @@ class Employee extends Component<Props, State> {
     );
   }
 
-  _renderEmployeeCostSheetContent(){
-    return(<View style={styles.SheetAmountContainer}>
+  _renderEmployeeCostSheetContent() {
+    return (<View style={styles.SheetAmountContainer}>
       <Formik
         initialValues={initialValues}
         validationSchema={girdiler}
@@ -259,7 +254,7 @@ class Employee extends Component<Props, State> {
       >
         {props => {
           return (
-            <View style={{flexDirection:"row"}}>
+            <View style={{ flexDirection: "row" }}>
               <View style={styles.inputFiyatContainer}>
                 <Input
                   containerStyle={{ width: '80%' }}
@@ -282,7 +277,7 @@ class Employee extends Component<Props, State> {
           );
         }}
       </Formik>
-</View>);
+    </View>);
 
   }
 
@@ -292,7 +287,8 @@ class Employee extends Component<Props, State> {
       return (<ActivityIndicator></ActivityIndicator>);
     }
     else {
-      return (<FlatList
+      return (<View>
+      <FlatList
         refreshing={this.state.refreshing}
         onRefresh={() => this.onRefresh()}
         data={this.props.employees}
@@ -314,7 +310,8 @@ class Employee extends Component<Props, State> {
             </TouchableOpacity>
           </View>)}
         keyExtractor={item => item.employeeId.toString()}
-      />);
+      />
+      </View>);
     }
   }
   render() {
@@ -331,9 +328,15 @@ class Employee extends Component<Props, State> {
           title="Çalışanlar"
           rightButtonPress={() => this.props.navigation.navigate("AddEmployee")}
         /> */}
+        
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
+            <View style={{margin:2}}></View>
+            <TouchableOpacity style={styles.employeeCostContainer}
+            onPress={() => this.props.navigation.navigate("EmployeeCost")}>
+            <Text style={styles.employeeCostButtonText}>Çalışan Giderleri</Text>
+          </TouchableOpacity>
 
             <RBSheet
               ref={ref => {
@@ -352,107 +355,25 @@ class Employee extends Component<Props, State> {
               {this._renderEmployeeSheetContent()}
             </RBSheet>
 
-            <Modal
-              visible={this.state.modalVisible}
-              animationType={'slide'}
-              onRequestClose={() => this.closeModal()}
-              transparent={true}
-            >
-              <View style={styles.modalContainer}>
-                <View style={styles.innerContainer}>
-                  <TouchableOpacity style={styles.modalCancelButtonContainer}
-                    onPress={() => this.closeModal()}>
-                    <Icon name="md-close" size={30} color={"#6E6E6E"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.modalEditButtonContainer}
-                    onPress={() => this.editEmployee()}>
-                    <Text style={styles.modalEditButtonText}
-                    >Düzenle</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.modalCostButtonContainer}
-                    onPress={() => this.addCash()}>
-                    <Text style={styles.modalCostButtonText}
-                    >Gider Ekle</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.modalDeleteButtonContainer}
-                    onPress={() => this.deleteEmployeeAlert()}>
-                    <Text style={styles.modalDeleteButtonText}
-                    >Sil</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>
-
-
             <RBSheet
-          ref={ref => {
-            this.AmountSheet = ref;
-          }}
-            height={100}
-            duration={200}
-            customStyles={{
-              container: {
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
-                paddingLeft:20
-              }
-            }}
-          >
-           {this._renderEmployeeCostSheetContent()}
-          </RBSheet>
-
-            <Modal
-              visible={this.state.modalAmountVisible}
-              animationType={'slide'}
-              onRequestClose={() => this.closeAmountModal()}
-              transparent={true}
+              ref={ref => {
+                this.AmountSheet = ref;
+              }}
+              height={100}
+              duration={200}
+              customStyles={{
+                container: {
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  paddingLeft: 20
+                }
+              }}
             >
-              <View style={styles.modalContainer}>
-                <View style={styles.innerContainer}>
-                  <TouchableOpacity style={styles.modalCancelButtonContainer}
-                    onPress={() => this.closeAmountModal()}>
-                    <Icon name="md-close" size={30} color={"#6E6E6E"} />
-                  </TouchableOpacity>
-                  <ScrollView bounces={false}>
-                    <Formik
-                      initialValues={initialValues}
-                      validationSchema={girdiler}
-                      onSubmit={values => this.giderEkle(values)}
-                    >
-                      {props => {
-                        return (
-                          <View>
-                            <View style={styles.inputFiyatContainer}>
-                              <Input
-                                containerStyle={{ width: '70%' }}
-                                style={styles.inputFiyat}
-                                placeholder="Ürün Fiyatı"
-                                placeholderTextColor="#9A9A9A"
-                                value={props.values.amount + ""}
-                                autoCapitalize="none"
-                                keyboardType="numeric"
-                                onChangeText={props.handleChange("amount")}
-                                onBlur={props.handleBlur("amount")}
-                              />
-                              <Text style={styles.inputFiyatText}>TL</Text>
-                            </View>
-                            <TouchableOpacity
-                              style={styles.amountButtonContainer}
-                              onPress={props.handleSubmit}>
-                              <Text style={styles.amountButtonText}> Ekle </Text>
-                            </TouchableOpacity>
-                          </View>
-                        );
-                      }}
-                    </Formik>
-                  </ScrollView>
-                </View>
-              </View>
-            </Modal>
+              {this._renderEmployeeCostSheetContent()}
+            </RBSheet>
             <View style={{ marginTop: 10 }}></View>
           </KeyboardAvoidingView>
-          {this._renderView()}
-
+          {this._renderView()} 
         </View>
       );
     }

@@ -31,7 +31,7 @@ export function GetReport(startDate:string,endDate:string) {
                         productsReport.push(productReport)
                     });
                     var reportModel: IReportItem = {
-                        totalIncome: response.data.result.totalIncom,
+                        totalIncome: response.data.result.totalIncome,
                         totalCost: response.data.result.totalCost,
                         totalPaidAmount: response.data.result.totalPaidAmount,
                         totalRestAmount: response.data.result.totalRestAmount,

@@ -89,3 +89,6 @@ export const EMPLOYEE_COST_ADD_FAILED ="EmployeeCostAddFailed";
 
 export const REPORT_GET = "ReportGet";
 export const REPORT_LOADING = "ReportLoading";
+
+export const EMPLOYEECOST_GET = "EmployeeCostGet";
+export const EMPLOYEECOST_LOADING = "EmployeeCostLoading";
