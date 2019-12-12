@@ -24,6 +24,7 @@ export function GetEmployeeCost() {
                             employeId: employeeCost.employeId,
                             employeName: employeeCost.employeName,
                             createdDate: employeeCost.createdDate,
+                            id: employeeCost.id,
                         }
                         employeeCostModel.push(employeeCostItem);
                     });

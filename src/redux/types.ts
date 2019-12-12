@@ -92,3 +92,9 @@ export const REPORT_LOADING = "ReportLoading";
 
 export const EMPLOYEECOST_GET = "EmployeeCostGet";
 export const EMPLOYEECOST_LOADING = "EmployeeCostLoading";
+
+export const EMPLOYEECOST_EDIT_SUCCEED ="EmployeeCostEditSucceed";
+export const EMPLOYEECOST_EDIT_FAILED ="EmployeeCostEditFailed";
+
+export const EMPLOYEECOST_DELETE_SUCCEED ="EmployeeCostDeleteSucceed";
+export const EMPLOYEECOST_DELETE_FAILED ="EmployeeCostDeleteFailed";

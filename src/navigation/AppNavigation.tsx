@@ -36,13 +36,15 @@ import addEmployee from "../pages/addEmployee";
 import editEmployee from "../pages/editEmployee";
 import report from "../pages/report";
 import employeeCost from "../pages/employeeCost";
+import editEmployeeCost from "../pages/editEmployeeCost";
 
 const EmployeeApp = createStackNavigator(
   {
     Employee: { screen: employee },
     AddEmployee: { screen: addEmployee },
     EditEmployee: { screen: editEmployee },
-    EmployeeCost: { screen: employeeCost }
+    EmployeeCost: { screen: employeeCost },
+    EditEmployeeCost: { screen: editEmployeeCost },
 
   },
   {

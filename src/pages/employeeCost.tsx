@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Modal,
+  Alert,
 } from "react-native";
 import { NavigationScreenProp, NavigationState, ScrollView } from "react-navigation";
 import { connect } from "react-redux";
@@ -19,22 +20,22 @@ import { AppState } from "../redux/store";
 import { IEmployeeCostItem } from "../redux/models/employeeCostModel";
 import Icon from "react-native-vector-icons/Ionicons";
 import RBSheet from "react-native-raw-bottom-sheet";
+import { employeeCostDelete } from "../redux/actions/deleteEmployeeCostAction";
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState>;
   isLoading: boolean;
   employeeCosts: IEmployeeCostItem[];
   GetEmployeeCost: () => void;
+  employeeCostDelete: (id: number) => void;
 }
 
 interface State {
   modalVisible: boolean;
   refreshing: boolean;
-  productId: number;
-  productName: string;
-  productCode: string;
-  price: number;
-  productStatus: boolean;
+  id: number;
+  employeId: number;
+  cost: number;
 }
 
 class employeeCost extends Component<Props, State> {
@@ -65,11 +66,9 @@ class employeeCost extends Component<Props, State> {
     this.state = {
       modalVisible: false,
       refreshing: false,
-      productId: 0,
-      productCode: "",
-      productName: "",
-      price: 0,
-      productStatus: false,
+      id: 0,
+      employeId: 0,
+      cost: 0,
     };
   }
 
@@ -79,19 +78,39 @@ class employeeCost extends Component<Props, State> {
   }
 
 
-  openModal(productCode: string, productName: string, price: number, productId: number, productStatus: boolean) {
+  openModal(id: number, employeId: number, cost: number) {
     this.setState({
-      productId: productId,
-      productCode: productCode,
-      productName: productName,
-      price: price,
-      productStatus: productStatus
+      id: id,
+      employeId: employeId,
+      cost: cost,
     });
     this.AmountSheet.open();
   }
 
   closeModal() {
     this.setState({ modalVisible: false });
+  }
+
+  deleteCost() {
+    Alert.alert(
+      //title
+      'Müşteri Silme İşlemi',
+      //body
+      'Müşteriyi silmek istiyor musunuz?',
+      [
+        { text: 'Geri Gel' },
+        { text: 'Evet', onPress: () => this.deleteSelectedCost() },
+      ],
+      { cancelable: false }
+    );
+
+  }
+
+  deleteSelectedCost() {
+    const { employeeCostDelete } = this.props;
+    employeeCostDelete(this.state.id);
+    this.onRefresh();
+
   }
 
   _renderProductSheetContent() {
@@ -105,6 +124,15 @@ class employeeCost extends Component<Props, State> {
         <Text style={styles.SheetItemText}
         >Düzenle</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.SheetItemContainer}
+        onPress={() => {
+          this.AmountSheet.close();
+          this.deleteCost();
+        }}>
+        <Icon name="ios-trash" size={30} style={styles.SheetItemIcon}></Icon>
+        <Text style={styles.SheetItemText}
+        >Sil</Text>
+      </TouchableOpacity>
     </View>);
 
   }
@@ -112,13 +140,11 @@ class employeeCost extends Component<Props, State> {
 
   editProduct() {
     this.closeModal();
-    this.props.navigation.navigate("EditProduct",
+    this.props.navigation.navigate("EditEmployeeCost",
       {
-        productId: this.state.productId,
-        productName: this.state.productName,
-        price: this.state.price,
-        productCode: this.state.productCode,
-        productStatus: this.state.productStatus
+        id: this.state.id,
+        cost: this.state.cost,
+        employeId: this.state.employeId,
       })
 
   }
@@ -141,18 +167,25 @@ class employeeCost extends Component<Props, State> {
         renderItem={({ item }) => (
           <View style={styles.row}>
             <View style={styles.row_cell5}>
-              <View style={styles.row_cell1}>
+              <View style={styles.row_cell7}>
                 <Text style={styles.musteri_adi}>{item.employeName}</Text>
-                
+
                 <Text style={styles.alt_bilgi}>Tarih: {item.createdDate.slice(8, 10) + "." +
-                                    item.createdDate.slice(5, 7) + "." +
-                                    item.createdDate.slice(0, 4)+" "+item.createdDate.slice(11,13)+":"+item.createdDate.slice(14,16)}</Text>
+                  item.createdDate.slice(5, 7) + "." +
+                  item.createdDate.slice(0, 4) + " " + item.createdDate.slice(11, 13) + ":" + item.createdDate.slice(14, 16)}</Text>
               </View>
               <View style={styles.row_cell2}>
                 <Text style={styles.productUrunfiyatText}>Gider: {item.cost} TL</Text>
               </View>
+              <View style={styles.row_cell6}>
+                <TouchableOpacity
+                  style={styles.iconButtonOrder}
+                  onPress={() => this.openModal(item.id, item.employeId, item.cost)}>
+                  <Icon name="md-more" size={24} color={"#C4B47B"} />
+                </TouchableOpacity>
+              </View>
             </View>
-            
+
           </View>)}
         keyExtractor={item => item.createdDate.toString()}
       />);
@@ -220,6 +253,8 @@ function bindToAction(dispatch: any) {
   return {
     GetEmployeeCost: () =>
       dispatch(GetEmployeeCost()),
+    employeeCostDelete: (id: number) =>
+      dispatch(employeeCostDelete(id))
   };
 }
 

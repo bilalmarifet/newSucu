@@ -25,6 +25,6 @@ export const WATER_DELETE_EMPLOYEE = WATER_BASE_URL+"/employe/Delete";
 export const WATER_GET_USER = WATER_BASE_URL+"/User?employeId=";
 export const WATER_ADD_EMPLOYEE_COST = WATER_BASE_URL+"/employeCost";
 export const WATER_GET_REPORT = WATER_BASE_URL+"/Report?StartDate=";
-export const WATER_GETEMPLOYEECOST = WATER_BASE_URL+"/employeCost"
-
-
+export const WATER_GETEMPLOYEECOST = WATER_BASE_URL+"/employeCost";
+export const WATER_EMPLOYEECOST_EDIT = WATER_BASE_URL+"/employeCost/Update";
+export const WATER_EMPLOYEECOST_DELETE = WATER_BASE_URL+"/employeCost/Delete";

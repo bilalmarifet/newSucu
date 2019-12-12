@@ -170,3 +170,14 @@ export interface GetEmployeeCostState{
   employees:IEmployeeCostItem[];
   isLoading :boolean;
 }
+
+export interface EmployeeCostEdit
+{
+  isSuccess: boolean,
+  EmployeeCostAddMessage: string,
+}
+
+export interface EmployeeCostDelete
+  {
+    isSuccess: boolean;
+  }
