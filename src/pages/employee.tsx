@@ -60,9 +60,7 @@ const initialValues: amountData = {
 }
 
 const girdiler = Yup.object().shape({
-  amount: Yup.number()
-    .positive()
-    .required(),
+  
 });
 
 class Employee extends Component<Props, State> {
@@ -189,7 +187,7 @@ class Employee extends Component<Props, State> {
   }
 
   giderEkle(values: amountData) {
-    this.props.employeeCost(this.state.employeeId, Number(values.amount));
+    this.props.employeeCost(this.state.employeeId, Number(values.amount.replace(",",".")));
     this.AmountSheet.close();
     this.onRefresh();
 
@@ -221,7 +219,7 @@ class Employee extends Component<Props, State> {
           }}>
           <Icon name="ios-add" size={30} style={styles.SheetItemIcon}></Icon>
           <Text style={styles.SheetItemText}
-          >Ödeme Ekle</Text>
+          >Maliyet Ekle</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.SheetItemContainer}
           onPress={() => {
@@ -234,8 +232,21 @@ class Employee extends Component<Props, State> {
         </TouchableOpacity>
         <TouchableOpacity style={styles.SheetItemContainer}
           onPress={() => {
-            this.OrderSheet.close();
-            this.deleteEmployeeAlert();
+            
+            this.OrderSheet.close.bind(this);
+            // this.deleteEmployeeAlert.bind(this);
+            Alert.alert(
+              //title
+              'Müşteri Silme İşlemi',
+              //body
+              'Müşteriyi silmek istiyor musunuz?',
+              [
+                { text: 'Geri Gel' },
+                { text: 'Evet', onPress: () => this.deleteSelectedEmployee() },
+              ],
+              { cancelable: true }
+            );
+            
           }}>
           <Icon name="ios-trash" size={30} style={styles.SheetItemIcon}></Icon>
           <Text style={styles.SheetItemText}
@@ -259,7 +270,7 @@ class Employee extends Component<Props, State> {
                 <Input
                   containerStyle={{ width: '80%' }}
                   style={styles.inputFiyat}
-                  placeholder="Ürün Fiyatı"
+                  placeholder="Maliyet"
                   placeholderTextColor="#9A9A9A"
                   value={props.values.amount + ""}
                   autoCapitalize="none"

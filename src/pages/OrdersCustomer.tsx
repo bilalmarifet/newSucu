@@ -368,7 +368,7 @@ class OrdersCustomer extends Component<Props, State> {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.SheetItemContainer}
                   onPress={() => {
-                    this.OrderSheet.close();
+                    // this.OrderSheet.close();
                     this.deleteOrderAlert();
                   }}>
                          <Icon name="ios-trash" size={30} style={styles.SheetItemIcon}></Icon>

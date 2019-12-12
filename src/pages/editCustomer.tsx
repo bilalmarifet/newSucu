@@ -46,8 +46,8 @@ const girdiler = Yup.object().shape({
   sirketAdi: Yup.string()
     .matches(/./g)
     .min(1)
-    .max(30)
-    .required(),
+    .max(30),
+    // .required(),
   fountainCount: Yup.number()
     .positive()
     .required()

@@ -60,8 +60,8 @@ const girdiler = Yup.object().shape({
   sirketAdi: Yup.string()
     .matches(/./g, " ")
     .min(3, "*Şirket adı 3 karakterden kısa olamaz!")
-    .max(30, "*Şirket adı 30 karakterden uzun olamaz!")
-    .required("*Zorunlu Alan"),
+    .max(30, "*Şirket adı 30 karakterden uzun olamaz!"),
+    // .required("*Zorunlu Alan"),
   fountainCount: Yup.number()
     .positive("*Pozitif değer giriniz.")
     .required("*Zorunlu Alan")

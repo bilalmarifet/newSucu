@@ -54,10 +54,7 @@ interface input{
 }
 
 const girdiler = Yup.object().shape({
-  price: Yup.number()
-  .positive()
-  .required()
-  .moreThan(0),
+  
 });
 class addOrder extends Component<Props, State> {
 
@@ -94,7 +91,9 @@ class addOrder extends Component<Props, State> {
 
   yeniFiyat(values:input){
     const { customerPriceAdd } = this.props;
-      customerPriceAdd(this.state.productId, this.state.customerId, Number(values.price));
+    console.log(Number(values.price.replace(",",".")))
+    
+      customerPriceAdd(this.state.productId, this.state.customerId, Number(values.price.replace(",",".")));
       this.props.navigation.navigate("OrdersCustomer");
       Alert.alert(
         //title

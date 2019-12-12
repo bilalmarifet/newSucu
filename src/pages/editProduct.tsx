@@ -50,10 +50,6 @@ const girdiler = Yup.object().shape({
   .min(1)
   .max(30)
   .required(),
-  price: Yup.number()
-  .positive()
-  .required()
-  .moreThan(0),
   productStatus: Yup.boolean()
   .required(),
 });
@@ -67,9 +63,9 @@ class editProduct extends Component<Props,state> {
     return {
 
       title: 'Ürün Bilgilerini Düzenle',
-      headerRight: <TouchableOpacity style={{marginRight:20}}  onPress={()=> navigation.navigate('CustomerAdd')}>
-<Icon name="ios-add" size={40} style={{color:'white'}} />
-      </TouchableOpacity>,
+//       headerRight: <TouchableOpacity style={{marginRight:20}}  onPress={()=> navigation.navigate('CustomerAdd')}>
+// <Icon name="ios-add" size={40} style={{color:'white'}} />
+//       </TouchableOpacity>,
 
 
     headerStyle: {
@@ -120,7 +116,7 @@ class editProduct extends Component<Props,state> {
     this.state.status, 
     values.productName,
     values.productCode,
-    Number(values.price));
+    Number(values.price.replace(",",".")));
     this.handleAlert();   
   };
 

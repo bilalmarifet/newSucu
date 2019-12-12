@@ -203,6 +203,7 @@ class Report extends Component<Props, State> {
                     <View style={{ flex: 1 }}>
                         <DatePicker
                             date={this.state.endDate}
+                            minimumDate = {this.state.startDate}
                             onDateChange={endDate => this.setState({ endDate })}
                             locale='tr'
                             mode="date"

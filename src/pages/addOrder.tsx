@@ -66,10 +66,7 @@ const girdiler = Yup.object().shape({
   count: Yup.number()
     .positive()
     .required(),
-  unitPrice: Yup.number()
-    .positive()
-    .required()
-    .moreThan(0),
+
 });
 class addOrder extends Component<Props, State> {
 
@@ -130,7 +127,7 @@ class addOrder extends Component<Props, State> {
   siparisOlustur(values: input) {
     const { AddOrder, navigation, isSuccees } = this.props;
     var customerId = navigation.getParam("customerId");
-    AddOrder(this.state.productId, customerId, Number(values.unitPrice), Number(values.count),this.state.status);
+    AddOrder(this.state.productId, customerId, Number(values.unitPrice.replace(",",".")), Number(values.count),this.state.status);
     this.handleAlert()
   }
 
