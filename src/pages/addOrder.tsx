@@ -263,7 +263,7 @@ class addOrder extends Component<Props, State> {
                         onPress={() => this.setState({ status: !this.state.status })}
                       />
 
-                        <Text style={styles.odenecekText}>Toplam Fiyat: {(Number(props.values.unitPrice) * Number(props.values.count))} TL</Text>
+                        <Text style={styles.odenecekText}>Toplam Fiyat: {(Number(props.values.unitPrice.replace(",",".")) * Number(props.values.count))} TL</Text>
 
                       <TouchableOpacity style={styles.siparisButtonContainer}>
                         <Text style={styles.amountButtonText}

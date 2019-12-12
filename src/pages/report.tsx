@@ -225,7 +225,7 @@ class Report extends Component<Props, State> {
                   {  this.state.show  && 
                         
                             <View style={{}}>
-                                <TouchableOpacity onPress={()=> this.setState({show:false})}><Icon name="close-circle"></Icon></TouchableOpacity>
+                                <TouchableOpacity style={{alignItems:'flex-end',marginRight:20,marginTop:10}} onPress={()=> this.setState({show:false})}><Icon name="md-close-circle" size={30} /></TouchableOpacity>
                                 <DateTimePicker value={this.state.startDate}
                     mode="date"
                     is24Hour={true}
@@ -252,7 +252,7 @@ class Report extends Component<Props, State> {
 {  this.state.showSecond  && 
                         
                         <View style={{}}>
-                            <TouchableOpacity onPress={()=> this.setState({showSecond:false})}><Icon name="ios-arrow-round-forward" size={30} color={"#EBEDF1"} /></TouchableOpacity>
+                            <TouchableOpacity style={{alignItems:'flex-end',marginRight:20,marginTop:10}} onPress={()=> this.setState({showSecond:false})}><Icon name="md-close-circle" size={30} /></TouchableOpacity>
                             <DateTimePicker value={this.state.endDate}
                             minimumDate={this.state.startDate}
                 mode="date"

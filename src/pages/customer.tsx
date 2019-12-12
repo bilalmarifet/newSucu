@@ -431,6 +431,7 @@ class Customer extends Component<Props, State> {
                   onValueChange={(value) => (this.getMusteri(value))}
                   items={[
                     { label: 'Ödeme Alınacaklar', value: 2 },
+                    { label: 'Bugünün Müşterileri', value: 3 }
                   ]}
                   textInputProps={{
 
@@ -441,8 +442,9 @@ class Customer extends Component<Props, State> {
                   }}
                 />
               </View>
-              <View style={[styles.rnpickerselect, styles.PickerColor]}>
+              <View style={[styles.rnpickerselect, styles.PickerColor,{opacity : this.state.orderType === 3 ? 0 : 1}]}>
                 <RNPickerSelect
+                disabled = {this.state.orderType === 3}
                   style={styles.pickerSelectStyles}
                   placeholder={placeHolderDay}
                   onValueChange={(value) => (this.getDayOfMusteri(value))}

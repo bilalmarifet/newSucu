@@ -62,8 +62,8 @@ const girdiler = Yup.object().shape({
     .min(3, "*Şirket adı 3 karakterden kısa olamaz!")
     .max(30, "*Şirket adı 30 karakterden uzun olamaz!"),
     // .required("*Zorunlu Alan"),
-  fountainCount: Yup.number()
-    .positive("*Pozitif değer giriniz.")
+
+
 
 
 });
@@ -149,7 +149,7 @@ class addCustomer extends Component<Props, CustomerInserState> {
       }
     }
     const { customerAdd } = this.props;
-    customerAdd(values.musteriAdiSoyadi, values.sirketAdi, this.state.dayOfWeek, values.fountainCount, gunler);
+    customerAdd(values.musteriAdiSoyadi, values.sirketAdi, this.state.dayOfWeek, Math.round(Number(values.fountainCount)).toString(), gunler);
 
   };
 

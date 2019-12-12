@@ -52,9 +52,7 @@ interface State {
 }
 
 const girdiler = Yup.object().shape({
-  amount: Yup.number()
-    .positive()
-    .required(),
+
 });
 
 const initialValues: amountData = {
@@ -214,7 +212,7 @@ class OrdersCustomer extends Component<Props, State> {
   }
 
   odemeAl(values: amountData) {
-    this.props.AddCash(this.state.orderId, values.amount);
+    this.props.AddCash(this.state.orderId, values.amount.replace(",","."));
     this.AmountSheet.close();
     this.onRefresh();
 
